@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <script>
+        function allowDrop(ev) {
+          ev.preventDefault();
+        }
+        
+        function drag(ev) {
+          ev.dataTransfer.setData("text", ev.target.id);
+        }
+        
+        function drop(ev) {
+          ev.preventDefault();
+          var data = ev.dataTransfer.getData("text");
+          ev.target.appendChild(document.getElementById(data));
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/f68cbb09ac.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./mainpage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./logo.png" alt="UoN MyPath">
+        </div>
+    </header>
+    <div class="content">
+        <div class="maincontent">
+            <div class="dropcontent">
+                <div class="table__top">    
+                    <div class="top__year">Year</div>
+                    <div class="top">Trimester 1</div>
+                    <div class="top">Trimester 2</div>
+                    <div class="top">Trimester 3</div>  
+                </div>  
+                <div class="dropbox">
+                    <div class="box__year">2020</div>
+                    <div id="2020__tri1" class="box" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div id="2020__tri2" class="box"></div>
+                    <div id="2020__tri3" class="box"></div>
+                </div>
+                <div class="dropbox">
+                    <div class="box__year">2021</div>
+                    <div id="2021__tri1" class="box"></div>
+                    <div id="2021__tri2" class="box"></div>
+                    <div id="2021__tri3" class="box"></div>
+                </div>
+                <div class="addyear">
+                    <div class="empty"></div>
+                    <div class="addbtn">
+                        <button class="btn__addyear">ADD YEAR</button>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="showpathbtn">
+                        <button class="btn__showpath">Show My Path ></button>
+                    </div>
+                    <div class="backbtn">
+                        <button class="btn__back">Back</button>
+                    </div>            
+                </div>
+            </div>
+
+            <div class= "selectcontent">
+                <div class="coursetop">
+                    <div class="searchbox">                        
+                        <input type="text" class="searchinput" placeholder="Search"></input>
+                        <button class="searchbtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="title">Courses</div>
+                </div>
+                <div class="coursetable">
+                    <div class="tabletop">
+                        <div class="top__core">Core</div>
+                        <div class="top__major1">Major 1</div>
+                        <div class="top__major2">Major 2</div>
+                    </div>
+                    <div class="coursebox">
+                        <div class="box__core" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div id="engg1003" class="coursecard" draggable="true" ondragstart="drag(event)">ENGG 1003</div>
+                            <div id="seng1050" class="coursecard" draggable="true" ondragstart="drag(event)">SENG 1050</div>
+                            <div id="inft2012" class="coursecard" draggable="true" ondragstart="drag(event)">INFT 2012</div>
+                            <div id="comp1140" class="coursecard" draggable="true" ondragstart="drag(event)">COMP 1140</div>
+                            
+                        </div>
+                        <div class="box__major1"></div>
+                        <div class="box__major2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+</body>
+</html>
