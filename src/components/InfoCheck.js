@@ -10,7 +10,6 @@ function InfoCheck(props) {
   const onClick = (e) => {
     // e.preventDefault();
     // alert("Please select all items!");
-
     console.log(props.getCampusValue);
     console.log(props.getDegreeValue);
     console.log(props.getYearValue);
@@ -40,15 +39,6 @@ function InfoCheck(props) {
         defaultOption="Select When You Start"
         data={yearData}
       />,
-
-      <Link
-        key="button"
-        className="btn__confirm"
-        onClick={() => onClick()}
-        to="/notification">
-        Confirm
-      </Link>
-
     ]));
   }
 
@@ -64,6 +54,15 @@ function InfoCheck(props) {
         data={campusData}
       />
       {selectInfo}
+
+      <Link
+        key="button"
+        className="btn__confirm"
+        onClick={onClick}
+        to="/notification">
+        Confirm
+      </Link>
+
     </div>
   );
 }
@@ -85,6 +84,7 @@ function SelectInfo(props) {
       }}>
         <option value={"null"}>{props.defaultOption}</option>
         {
+          // 'name' changes by the data's key (check test data below)
           props.data.map((data) => (
             <option key={data.name} value={data.name}>{data.name}</option>
           ))

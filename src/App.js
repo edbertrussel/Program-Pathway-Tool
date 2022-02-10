@@ -10,6 +10,13 @@ function App() {
   const [degreeValue, setDegreeValue] = useState("null");
   const [yearValue, setYearValue] = useState("null");
 
+  // To check State value
+  useEffect(() => {
+    console.log(campusValue);
+    console.log(degreeValue);
+    console.log(yearValue);
+  })
+
   return (
     <div className="App">
       <Routes>
