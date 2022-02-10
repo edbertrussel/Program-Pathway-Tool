@@ -1,0 +1,29 @@
+.Notification {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.lbl__notification {
+  font-size: 28px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.btn__okay {
+  margin: 20px 0 50px 0;
+  width: 100px;
+  height: 40px;
+  background-color: var(--blue);
+  color: white;
+}
+
+.btn__back {
+  margin: 20px 0 50px 0;
+  width: 50px;
+  height: 40px;
+  background-color: var(--gray);
+  color: white;
+}

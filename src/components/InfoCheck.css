@@ -1,0 +1,50 @@
+.InfoCheck {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.logo {
+  width: 350px;
+  padding-bottom: 50px;
+}
+
+.SelectInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.askCampus {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.selectBar {
+  width: 300px;
+  height: 40px;
+  margin-bottom: 30px;
+  padding: 0.2em 0.2em;
+  background-color: var(--bright-gray);
+  border: none;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.selectBar option {
+  font-size: 14px;
+}
+
+.btn__confirm {
+  margin: 20px 0 50px 0;
+  width: 100px;
+  height: 40px;
+  background-color: var(--blue);
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}

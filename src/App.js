@@ -1,28 +1,38 @@
-import logo from './logo.svg';
+import InfoCheck from './components/InfoCheck.js'
+import Notification from './components/Notification.js';
 import './App.css';
-import { Component } from 'react/cjs/react.production.min';
+import React, { useState, useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }  
+function App() {
+  // States
+  const [campusValue, setCampusValue] = useState("null");
+  const [degreeValue, setDegreeValue] = useState("null");
+  const [yearValue, setYearValue] = useState("null");
+
+  return (
+    <div className="App">
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <InfoCheck
+              setCampusValue={setCampusValue}
+              setDegreeValue={setDegreeValue}
+              setYearValue={setYearValue}
+              getCampusValue={campusValue}
+              getDegreeValue={degreeValue}
+              getYearValue={yearValue}
+            />} />
+        <Route
+          path='/notification'
+          element={
+            <Notification />
+          } />
+        <Route path='/' />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;
