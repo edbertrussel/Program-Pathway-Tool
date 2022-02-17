@@ -39,12 +39,10 @@
   font-size: 14px;
 }
 
-.btn__confirm {
+.link__confirm {
   margin: 20px 0 50px 0;
   width: 100px;
   height: 40px;
   background-color: var(--blue);
   color: white;
-  font-family: 'Roboto', sans-serif;
-  font-weight: bold;
 }

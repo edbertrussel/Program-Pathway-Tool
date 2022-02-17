@@ -1,6 +1,6 @@
 import logo from '../logo.png'
 import './Notification.css'
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Notification(){
@@ -11,7 +11,7 @@ function Notification(){
       <p className='lbl__notification'>Drag and drop the courses you have taken</p>
       <Link
         className="btn__okay"
-        to="/main">
+        to="/usermain">
         Okay
       </Link>
       <Link

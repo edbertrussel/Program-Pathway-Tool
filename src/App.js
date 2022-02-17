@@ -1,21 +1,15 @@
 import InfoCheck from './components/InfoCheck.js'
 import Notification from './components/Notification.js';
+import UserMain from './components/UserMain.js';
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
   // States
-  const [campusValue, setCampusValue] = useState("null");
-  const [degreeValue, setDegreeValue] = useState("null");
-  const [yearValue, setYearValue] = useState("null");
-
-  // To check State value
-  useEffect(() => {
-    console.log(campusValue);
-    console.log(degreeValue);
-    console.log(yearValue);
-  })
+  const [campusValue, setCampusValue] = useState("");
+  const [degreeValue, setDegreeValue] = useState("");
+  const [yearValue, setYearValue] = useState("");
 
   return (
     <div className="App">
@@ -36,7 +30,15 @@ function App() {
           element={
             <Notification />
           } />
-        <Route path='/' />
+        <Route
+          path='/usermain'
+          element={
+            <UserMain
+              getCampusValue={campusValue}
+              getDegreeValue={degreeValue}
+              getYearValue={yearValue}
+            />
+          } />
       </Routes>
     </div>
   );
