@@ -1,9 +1,14 @@
 import './SelectCourse.css'
 import React from 'react';
+import { useDrop } from 'react-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 function SelectCourse(props) {
+  const [, drop] = useDrop(() => ({
+    accept: 'course',
+  }))
+
   return (
     <div className="SelectCourse">
       <div className="contentHeader">
@@ -27,15 +32,14 @@ function SelectCourse(props) {
           <div className="header__major2">Major 2</div>
         </div>
         <div className="courseBox">
-          <div className="box__core">
-            <div id="engg1003" className="coursecard" >ENGG 1003</div>
-            <div id="seng1050" className="coursecard" >SENG 1050</div>
-            <div id="inft2012" className="coursecard" >INFT 2012</div>
-            <div id="comp1140" className="coursecard" >COMP 1140</div>
+          <div ref={drop} className="box__core">
+            {props.setBoxForCourse("box__core")}
           </div>
-          <div className="box__major1">
+          <div ref={drop} className="box__major1">
+            {props.setBoxForCourse("box__major1")}
           </div>
-          <div className="box__major2">
+          <div ref={drop} className="box__major2">
+            {props.setBoxForCourse("box__major2")}
           </div>
         </div>
       </div>

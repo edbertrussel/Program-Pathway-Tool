@@ -6,19 +6,30 @@ import { Link } from "react-router-dom";
 function InfoCheck(props) {
   // States
   const [isCampusSelected, setCampusSelected] = useState(false);
+  const [isDegreeSelected, setDegreeSelected] = useState(false);
+  const [isMajorSelected, setMajorSelected] = useState(false);
 
   const onClick = (e) => {
-    if (!props.getCampusValue || !props.getDegreeValue || !props.getYearValue) {
+    if (!props.getCampusValue || !props.getDegreeValue || !props.getMajorValue || !props.getYearValue) {
       e.preventDefault();
       alert("Please select all items!");
     }
   };
 
-  // Add two more select list when an option is selected.
-  const handleChange = () => {
-    // Once the SelcetInfo elements have been added, no more elements are added.
+  // Add select list when an option is selected.
+  const handleCampusChange = () => {
     if (!isCampusSelected)
       setCampusSelected(true);
+  };
+
+  const handleDegreeChange = () => {
+    if (!isDegreeSelected)
+      setDegreeSelected(true);
+  };
+
+  const handleMajorChange = () => {
+    if (!isMajorSelected)
+      setMajorSelected(true);
   };
 
   return (
@@ -27,7 +38,7 @@ function InfoCheck(props) {
       <SelectInfo
         key="selectCampus"
         setCampusValue={props.setCampusValue}
-        handleChange={handleChange}
+        handleChange={handleCampusChange}
         title="Which Campus Are You Studying At?"
         defaultOption="Select Your Campus"
         data={campusData}
@@ -37,16 +48,32 @@ function InfoCheck(props) {
           <SelectInfo
             key="selectDegree"
             setDegreeValue={props.setDegreeValue}
-            handleChange={handleChange}
+            handleChange={handleDegreeChange}
             title="Which degree are you learning?"
             defaultOption="Select Your Degree"
             data={degreeData}
           />
+        </>
+      )}
+      {isDegreeSelected && (
+        <>
+          <SelectInfo
+            key="selectMajor"
+            setYearValue={props.setMajorValue}
+            handleChange={handleMajorChange}
+            title="Which major are you in?"
+            defaultOption="Select Your Major"
+            data={majorData}
+          />
+        </>
+      )}
+      {isMajorSelected && (
+        <>
           <SelectInfo
             key="selectYear"
             setYearValue={props.setYearValue}
-            handleChange={handleChange}
-            title="From which year do you start learning?"
+            handleChange={handleDegreeChange}
+            title="From which year did you start learning?"
             defaultOption="Select When You Start"
             data={yearData}
           />
@@ -55,7 +82,7 @@ function InfoCheck(props) {
             key="link__confirm"
             className="link__confirm"
             onClick={(e) => onClick(e)}
-            to="/notification"
+            to="/usermain"
           >
             Confirm
           </Link>
@@ -74,8 +101,10 @@ function SelectInfo(props) {
         onChange={(event) => {
           if (props.data === campusData) {
             props.setCampusValue(event.target.value);
-          } else if (props.data === degreeData)
+          }
+          else if (props.data === degreeData) {
             props.setDegreeValue(event.target.value);
+          }
           else props.setYearValue(event.target.value);
 
           props.handleChange();
@@ -117,6 +146,15 @@ const degreeData = [
   },
   {
     name: "Bachelor of Information Technology",
+  },
+];
+
+const majorData = [
+  {
+    name: "Systems Development",
+  },
+  {
+    name: "Business Technology",
   },
 ];
 
