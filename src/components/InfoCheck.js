@@ -1,13 +1,46 @@
 import logo from "../logo.png";
 import "./InfoCheck.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function InfoCheck(props) {
   // States
   const [isCampusSelected, setCampusSelected] = useState(false);
   const [isDegreeSelected, setDegreeSelected] = useState(false);
   const [isMajorSelected, setMajorSelected] = useState(false);
+  const [campusData, setCampusData] = useState([]);
+  const [degreeData, setDegreeData] = useState([]);
+  const [majorData, setMajorData] = useState([]);
+  const [yearData, setYearData] = useState([]);
+
+
+  async function getData() {
+    try {
+      const response__campus = await axios.get('http://localhost:5000/api/campus');
+      const campusObj = response__campus.data.result;
+      const campusAry = campusObj.map(obj => obj.Campus_Name)
+      setCampusData(campusAry);
+
+      const response__degree = await axios.get('http://localhost:5000/api/degree');
+      const degreeObj = response__degree.data.result;
+      const degreeAry = degreeObj.map(obj => obj.Degree_Name)
+      setDegreeData(degreeAry);
+
+      const majorAry = majorObj.map(obj => obj.Major_Name)
+      setMajorData(majorAry);
+
+      const yearAry = yearObj.map(obj => obj.Year)
+      setYearData(yearAry);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const onClick = (e) => {
     if (!props.getCampusValue || !props.getDegreeValue || !props.getMajorValue || !props.getYearValue) {
@@ -17,19 +50,29 @@ function InfoCheck(props) {
   };
 
   // Add select list when an option is selected.
-  const handleCampusChange = () => {
+  const handleCampusChange = (e) => {
+    props.setCampusValue(e.target.value);
+
     if (!isCampusSelected)
       setCampusSelected(true);
   };
 
-  const handleDegreeChange = () => {
+  const handleDegreeChange = (e) => {
+    props.setDegreeValue(e.target.value);
+
     if (!isDegreeSelected)
       setDegreeSelected(true);
   };
 
-  const handleMajorChange = () => {
+  const handleMajorChange = (e) => {
+    props.setMajorValue(e.target.value);
+
     if (!isMajorSelected)
       setMajorSelected(true);
+  };
+
+  const handleYearChange = (e) => {
+    props.setYearValue(e.target.value);
   };
 
   return (
@@ -38,7 +81,7 @@ function InfoCheck(props) {
       <SelectInfo
         key="selectCampus"
         setCampusValue={props.setCampusValue}
-        handleChange={handleCampusChange}
+        handleChange={(e) => handleCampusChange(e)}
         title="Which Campus Are You Studying At?"
         defaultOption="Select Your Campus"
         data={campusData}
@@ -48,7 +91,7 @@ function InfoCheck(props) {
           <SelectInfo
             key="selectDegree"
             setDegreeValue={props.setDegreeValue}
-            handleChange={handleDegreeChange}
+            handleChange={(e) => handleDegreeChange(e)}
             title="Which degree are you learning?"
             defaultOption="Select Your Degree"
             data={degreeData}
@@ -60,7 +103,7 @@ function InfoCheck(props) {
           <SelectInfo
             key="selectMajor"
             setYearValue={props.setMajorValue}
-            handleChange={handleMajorChange}
+            handleChange={(e) => handleMajorChange(e)}
             title="Which major are you in?"
             defaultOption="Select Your Major"
             data={majorData}
@@ -72,7 +115,7 @@ function InfoCheck(props) {
           <SelectInfo
             key="selectYear"
             setYearValue={props.setYearValue}
-            handleChange={handleDegreeChange}
+            handleChange={(e) => handleYearChange(e)}
             title="From which year did you start learning?"
             defaultOption="Select When You Start"
             data={yearData}
@@ -98,22 +141,12 @@ function SelectInfo(props) {
       <p className="askCampus">{props.title}</p>
       <select
         className="selectBar"
-        onChange={(event) => {
-          if (props.data === campusData) {
-            props.setCampusValue(event.target.value);
-          }
-          else if (props.data === degreeData) {
-            props.setDegreeValue(event.target.value);
-          }
-          else props.setYearValue(event.target.value);
-
-          props.handleChange();
-        }}
+        onChange={(e) => props.handleChange(e)}
       >
         <option value={""}>{props.defaultOption}</option>
         {props.data.map((data) => (
-          <option key={data.name} value={data.name}>
-            {data.name}
+          <option key={data} value={data}>
+            {data}
           </option>
         ))}
       </select>
@@ -122,60 +155,36 @@ function SelectInfo(props) {
 }
 
 //---------Test Data--------------------------------------------------
-const campusData = [
+
+const majorObj = [
   {
-    name: "Singapore",
+    Major_Id: 1,
+    Major_Name: "Systems Development",
+  },
+  {
+    Major_Id: 2,
+    Major_Name: "Business Technology",
   },
 ];
 
-const degreeData = [
+const yearObj = [
   {
-    name: "Bachelor of Business",
+    Year: "2017",
   },
   {
-    name: "Bachelor of Commerce",
+    Year: "2018",
   },
   {
-    name: "Bachelor of Electrical and Electronic Engineering (Honours)",
+    Year: "2019",
   },
   {
-    name: "Bachelor of Environmental and Occupational Health and Safety (Singapore)",
+    Year: "2020",
   },
   {
-    name: "Bachelor of Mechanical Engineering (Honours)",
+    Year: "2021",
   },
   {
-    name: "Bachelor of Information Technology",
-  },
-];
-
-const majorData = [
-  {
-    name: "Systems Development",
-  },
-  {
-    name: "Business Technology",
-  },
-];
-
-const yearData = [
-  {
-    name: "2017",
-  },
-  {
-    name: "2018",
-  },
-  {
-    name: "2019",
-  },
-  {
-    name: "2020",
-  },
-  {
-    name: "2021",
-  },
-  {
-    name: "2022",
+    Year: "2022",
   },
 ];
 
