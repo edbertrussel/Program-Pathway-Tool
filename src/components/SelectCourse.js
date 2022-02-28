@@ -7,6 +7,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 function SelectCourse(props) {
   const [, drop] = useDrop(() => ({
     accept: 'course',
+    drop: () => ({ boxName: "box__core" }),
   }))
 
   return (

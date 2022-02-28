@@ -12,7 +12,7 @@ function CourseCard(props) {
 
   const [, drag] = useDrag(() => ({
     type: 'course',
-    item: { name: props.courseName, },
+    item: { name: props.courseName },
     end: (monitor) => {
       const dropResult = monitor.getDropResult();
       console.log(dropResult);
