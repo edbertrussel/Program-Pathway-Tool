@@ -1,0 +1,225 @@
+/* Admin Mainpage  */
+.home-component{
+    width:80vw;
+    min-width:600px;
+    margin:20px auto;
+ 
+}
+.menu{
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    
+}
+/* taBComponent */
+.tab-component{
+    border-radius: 5px;
+    display:flex;
+    flex-direction: column;
+    background-color:var(--bright-gray);
+    min-height: 600px;
+    width:75%;
+    
+}
+.tabs{
+    margin:10px;
+    
+    display: flex;
+   
+   
+}
+.tab{
+     /* tab in normal form */
+    background-color: var(--gray);
+    color:var(--dark-gray);
+    padding:10px;
+    flex-grow: 1;
+    text-align: center;
+    cursor: pointer;
+   
+}
+.tab:hover{
+    background-color: var(--placeholder-color);
+}
+.tab-selected{
+    /* tab which was selected */
+    background-color: white;
+    color:var(--blue);
+}
+/* TabContent */
+.tab-content{
+    display: flex;
+    flex-direction: column;
+    padding:10px;
+    
+}
+.tab-content-item{
+    border-radius: 3px;
+    background-color: var(--dark-gray);
+    color:white;
+    display:grid;
+    grid-template-columns: 150px 1fr 50px;
+    padding:10px;
+    margin:5px 0;
+}
+.tab-content-btn-grp{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-edit{
+    cursor: pointer;
+}
+/* Admin Page TopBar */
+.top-bar{
+    display:flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding:10px;
+}
+
+
+/* toolbar */
+.toolbar {
+
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    width: 75%;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.search-bar {
+    padding: 20px;
+}
+
+.toolbar-btn-grp {
+    display: flex;
+    column-gap: 10px;
+}
+/* general btn styling */
+button,input{
+    
+    cursor:pointer;
+    padding:10px;
+    transition: all 0.5s;
+}
+.btn-blue{
+    color:white;
+    background-color: var(--blue);
+    
+    border:2px solid var(--blue);
+}
+.btn-blue:hover{
+    color:var(--blue);
+    background-color: white;
+}
+.btn-red {
+    color: white;
+    background-color: var(--dark-red);
+    
+    border:2px solid var(--dark-red);
+}
+.btn-red:hover{
+    color: var(--dark-red);
+    background-color: white;
+}
+.btn-gray{
+    color: white;
+    background-color: var(--gray);
+   
+    border:2px solid var(--gray);
+}
+.btn-gray:hover{
+    color: var(--gray);
+    background-color:white ;
+    
+}
+/* Loader and error message*/
+.loader {
+    border: 10px dotted #f3f3f3;
+    border-radius: 50%;
+    margin:auto;
+    width: 65px;
+    height: 65px;
+    animation: spin 1s ease-in infinite;
+
+}
+
+
+@keyframes spin {
+    0% {
+        border-bottom: 10px dotted #6c7175;
+        border-left: 10px dotted #414649;
+    }
+
+    25% {
+        border-left: 10px dotted #6c7175;
+        border-top: 10px dotted #414649;
+    }
+
+    50% {
+        border-top: 10px dotted #6c7175;
+        border-right: 10px dotted #414649;
+    }
+
+    100% {
+        border-right: 10px dotted #6c7175;
+        border-bottom: 10px dotted #414649;
+    }
+}
+
+.error{
+    margin:auto;
+}
+/* filter - component */
+.filter-component{
+    border-radius:5px;
+    width:20%;
+    background-color:#FAFEFF;
+    font-family: 'Alegreya SC',serif;
+    border: 2px solid var(--dark-gray);
+    padding:20px;
+}
+.filter-text{
+    text-align: center;
+    border-bottom: 2px solid var(--dark-gray);
+}
+.filter-option{
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+}
+.filter-btn{
+    display: block;
+    margin:auto;
+}
+/* Message Box*/
+.black-background{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left:0;
+    top:0;
+    background-color: rgb(0,0,0,0.5);
+    z-index: 1;
+}
+.message-box{
+    position: fixed;
+    padding:30px;
+    background-color: var(--placeholder-color);
+    left:50%;
+    top:30%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+}
+.message-box-btn-grp{
+    display: flex;
+    justify-content: space-around;
+}
+.message-box-btn{
+    z-index: 3;
+}

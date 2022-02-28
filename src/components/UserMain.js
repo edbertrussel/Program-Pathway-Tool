@@ -1,6 +1,7 @@
 import logo from "../logo.png";
 import "./UserMain.css";
 import SelectCourse from "./SelectCourse";
+<<<<<<< HEAD
 import CourseCard from "./CourseCard";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,6 +9,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider, useDrop } from "react-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+=======
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { Link } from "react-router-dom";
+>>>>>>> 8338b20176dfc8d039bebcc90950f6dc5c05dcd0
 
 function UserMain(props) {
   const [yearNumber, setYearNumber] = useState([0, 1]);
@@ -82,6 +89,7 @@ function UserMain(props) {
   };
 
   return (
+<<<<<<< HEAD
     <DndProvider backend={HTML5Backend}>
       <div className="UserMain">
         <header>
@@ -104,6 +112,42 @@ function UserMain(props) {
                     getYearValue={startYear + i}
                     setBoxForCourse={setBoxForCourse}
                     onDrop={onDrop}
+=======
+    <div className="UserMain">
+      <header>
+        <img src={logo} className="logo" alt="logo" />
+      </header>
+      <div className="content">
+        <div className="mainContent">
+          <div className="droptable">
+            <div className="tableHeader">
+              <div className="header__year">Year</div>
+              <div className="header__tri">Trimester 1</div>
+              <div className="header__tri">Trimester 2</div>
+              <div className="header__tri">Trimester 3</div>
+            </div>
+
+            {yearNumber.map((i) => (
+              <>
+                <DropBox key={startYear + i} getYearValue={startYear + i} />
+              </>
+            ))}
+
+            <div className="handleYear">
+              <div className="blank"></div>
+              <button className="btn__addYear" onClick={(e) => onAddClick(e)}>
+                ADD YEAR
+              </button>
+              <div className="deleteYear">
+                <button
+                  className="btn__deleteyear"
+                  onClick={(e) => onDeleteClick(e)}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrashCan}
+                    size="lg"
+                    className="iconTrashCan"
+>>>>>>> 8338b20176dfc8d039bebcc90950f6dc5c05dcd0
                   />
                 </>
               ))}
@@ -136,15 +180,32 @@ function UserMain(props) {
               </div>
             </div>
 
+<<<<<<< HEAD
             <SelectCourse setBoxForCourse={setBoxForCourse} onDrop={onDrop} />
           </div>
         </div>
       </div>
     </DndProvider>
+=======
+            <div className="buttons">
+              <div className="blank"></div>
+              <Link key="link__back" className="link__back" to="/">
+                Back
+              </Link>
+              <button className="btn__showpath">Show My Path</button>
+            </div>
+          </div>
+
+          <SelectCourse />
+        </div>
+      </div>
+    </div>
+>>>>>>> 8338b20176dfc8d039bebcc90950f6dc5c05dcd0
   );
 }
 
 function DropBox(props) {
+<<<<<<< HEAD
   
   const [, drop__tri1] = useDrop(() => ({
     accept: "course",
@@ -161,6 +222,8 @@ function DropBox(props) {
     drop: (item) => props.onDrop(item.name, props.getYearValue + "__tri3"),
   }));
 
+=======
+>>>>>>> 8338b20176dfc8d039bebcc90950f6dc5c05dcd0
   return (
     <div className="DropBox">
       <div className="box__year">{props.getYearValue}</div>
