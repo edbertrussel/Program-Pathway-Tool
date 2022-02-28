@@ -1,37 +1,59 @@
-import React, { useState } from 'react';
-import './FormFill.css';
+import { useState } from 'react';
+import axios from 'axios';
+//import HttpRequest from "../../../HttpRequest";
 
-function FormFill({ Login, error }) {
 
-  const [details, setDetails] = useState({name:"", password:""});
+function AdminLogin() {
 
-  const submitHandler = e => {
-    e.preventDefault();
+  const  [adminId, setAdminId] = useState('')
+  const  [password, setPassword] = useState('')
+  const  [loginStatus, setLoginStatus] = useState('')
 
-    Login(details);
-  }
+/*   const Login = () => {
+    HttpRequest({
+      method: 'POST',
+      url: `/api/admin/login`,
+      adminId: adminId, 
+      password: password
+    });
+  }; */
+
+  const Login = () => {
+    axios.post("http://localhost:5000/api/admin/login", {
+      adminId: adminId,
+      password: password
+    }).then( res => {
+        alert(res.data.status);
+        alert(res.data.message);
+        //setLoginStatus(res.data.status);
+    })
+    .catch( error => {
+      alert(error);
+    })
+  };
 
   return (
-    <form onSubmit={submitHandler}>
+    <form>
       <div className='form-inner'>
 
         <h2>Login</h2>
-        {(error != "") ? (<div className='error'>{error}</div>) : ""}
+
         <div className='form-group'>
           <label htmlFor='name'>Name:</label>
-          <input type='text' name='name' id='name' onChange={(e) => setDetails({...details, name: e.target.value})} value={details.name}></input>
+          <input type='text' onChange={(e)=> {setAdminId(e.target.value)}} />
         </div>
 
         <div className='form-group'>
           <label htmlFor='password'>Password:</label>
-          <input type='password' name='password' id='password' onChange={e => setDetails({...details, password: e.target.value})} value={details.password}></input>
+          <input type='password' onChange={(e)=> {setPassword(e.target.value)}} />
         </div>
 
-        <input type='submit' value='Login'/>
+        <button onClick={Login}>LOGIN</button>
 
+        <h1>{loginStatus}</h1>
       </div>
     </form>
   )
 }
 
-export default FormFill
+export default AdminLogin

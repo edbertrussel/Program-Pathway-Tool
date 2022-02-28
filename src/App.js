@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminHome from "./components/Admin/Page/AdminHome.js";
 import { AdminContextProvider } from "./components/Context/AdminContext.js";
+import AdminForm from "./components/Admin/Page/AdminLogin.js";
 
 function App() {
   // States
@@ -47,6 +48,12 @@ function App() {
               <AdminHome />
             </AdminContextProvider>
           }
+        ></Route>
+        <Route
+          path="/admin/login"
+          element={
+          <AdminForm />
+        }
         ></Route>
       </Routes>
     </div>
