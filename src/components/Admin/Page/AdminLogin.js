@@ -10,35 +10,13 @@ function AdminLogin() {
   const  [password, setPassword] = useState('')
   const  [loginStatus, setLoginStatus] = useState('')
 
-/*   const Login = () => {
-    HttpRequest({
-      method: 'POST',
-      url: `/api/admin/login`,
-      adminId: adminId, 
-      password: password
-    });
-  }; */
-
   function validateForm() {
     return text.length > 0 && password.length > 0;
   }
 
-/*   async function Login(event) {
-    event.preventDeafault();
+  const Login = (e) => {
+    e.preventDefault();
 
-    try {
-      await axios.post("http://localhost:5000/api/admin/login", {
-        adminId: adminId,
-        password: password
-      }).then( res => {
-        alert(res.data.status);
-    })
-    } catch (e) {
-      alert(e.message);
-    }
-  }  */
-
-/*   async function Login () {
     axios.post("http://localhost:5000/api/admin/login", {
       adminId: adminId,
       password: password
@@ -46,19 +24,8 @@ function AdminLogin() {
         alert(res.data.status);
     })
     .catch( error => {
-      alert(error.message);
-    })
-  }; */
-
-    const Login = () => {
-    axios.post("http://localhost:5000/api/admin/login", {
-      adminId: adminId,
-      password: password
-    }).then( res => {
-        alert(res.data.status);
-    })
-    .catch( error => {
-      alert(error);
+      alert(error.response.data.error);
+      setLoginStatus('ID or Password is incorrect!');
     })
   }; 
 
@@ -79,7 +46,8 @@ function AdminLogin() {
         </div>
 
         <button type='submit' disabled={!validateForm()} onClick={Login}> Login </button>
-
+         
+        <h1>{loginStatus}</h1>
       </div>
     </form>
   )
