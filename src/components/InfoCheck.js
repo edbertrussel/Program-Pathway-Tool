@@ -6,69 +6,74 @@ import axios from "axios";
 
 function InfoCheck(props) {
   // States
-  const [isCampusSelected, setCampusSelected] = useState(false);
-  const [isDegreeSelected, setDegreeSelected] = useState(false);
-  const [isMajorSelected, setMajorSelected] = useState(false);
+
   const [campusData, setCampusData] = useState([]);
   const [degreeData, setDegreeData] = useState([]);
   const [majorData, setMajorData] = useState([]);
   const [yearData, setYearData] = useState([]);
 
-
-  async function getData() {
+  async function getData(url, type) {
     try {
-      const response__campus = await axios.get('http://localhost:5000/api/campus');
-      const campusObj = response__campus.data.result;
-      const campusAry = campusObj.map(obj => obj.Campus_Name)
-      setCampusData(campusAry);
-
-      const response__degree = await axios.get('http://localhost:5000/api/degree');
-      const degreeObj = response__degree.data.result;
-      const degreeAry = degreeObj.map(obj => obj.Degree_Name)
-      setDegreeData(degreeAry);
-
-      const majorAry = majorObj.map(obj => obj.Major_Name)
-      setMajorData(majorAry);
-
-      const yearAry = yearObj.map(obj => obj.Year)
-      setYearData(yearAry);
-
+      const response = await axios.get(url);
+      let resultList = response.data.result;
+      resultList = resultList.map((obj) => ({
+        [`${type}Id`]: obj[`${type}_ID`],
+        [`${type}Name`]: obj[`${type}_Name`],
+      }));
+      return resultList;
     } catch (error) {
       console.log(error);
+      return [];
     }
-  };
+  }
 
   useEffect(() => {
-    getData();
+    async function loadCampusList() {
+      setCampusData(
+        await getData("http://localhost:5000/api/campus", "Campus")
+      );
+    }
+    loadCampusList();
   }, []);
 
   const onClick = (e) => {
-    if (!props.getCampusValue || !props.getDegreeValue || !props.getMajorValue || !props.getYearValue) {
+    if (
+      !props.getCampusValue ||
+      !props.getDegreeValue ||
+      !props.getMajor1Value ||
+      !props.getYearValue
+    ) {
       e.preventDefault();
       alert("Please select all items!");
     }
   };
 
   // Add select list when an option is selected.
-  const handleCampusChange = (e) => {
+  const handleCampusChange = async (e) => {
     props.setCampusValue(e.target.value);
+    console.log(e.target.value);
 
-    if (!isCampusSelected)
-      setCampusSelected(true);
+    setDegreeData(
+      await getData(
+        `http://localhost:5000/api/campus/${e.target.value}/degree`,
+        "Degree"
+      )
+    );
   };
 
   const handleDegreeChange = (e) => {
     props.setDegreeValue(e.target.value);
 
-    if (!isDegreeSelected)
-      setDegreeSelected(true);
+    setMajorData(majorObj);
   };
 
-  const handleMajorChange = (e) => {
-    props.setMajorValue(e.target.value);
+  const handleMajor1Change = (e) => {
+    props.setMajor1Value(e.target.value);
 
-    if (!isMajorSelected)
-      setMajorSelected(true);
+    setYearData(yearObj);
+  };
+  const handleMajor2Change = (e) => {
+    props.setMajor2Value(e.target.value);
   };
 
   const handleYearChange = (e) => {
@@ -85,8 +90,9 @@ function InfoCheck(props) {
         title="Which Campus Are You Studying At?"
         defaultOption="Select Your Campus"
         data={campusData}
+        type="Campus"
       />
-      {isCampusSelected && (
+      {degreeData.length !== 0 && (
         <>
           <SelectInfo
             key="selectDegree"
@@ -95,22 +101,33 @@ function InfoCheck(props) {
             title="Which degree are you learning?"
             defaultOption="Select Your Degree"
             data={degreeData}
+            type="Degree"
           />
         </>
       )}
-      {isDegreeSelected && (
+      {majorData.length !== 0 && (
         <>
           <SelectInfo
-            key="selectMajor"
+            key="selectMajor1"
             setYearValue={props.setMajorValue}
-            handleChange={(e) => handleMajorChange(e)}
+            handleChange={(e) => handleMajor1Change(e)}
             title="Which major are you in?"
             defaultOption="Select Your Major"
             data={majorData}
+            type="Major"
+          />
+          <SelectInfo
+            key="selectMajor2"
+            setYearValue={props.setMajorValue}
+            handleChange={(e) => handleMajor2Change(e)}
+            title="Major 2 (if any)"
+            defaultOption="Select Your Major 2"
+            data={majorData}
+            type="Major"
           />
         </>
       )}
-      {isMajorSelected && (
+      {majorData.length !== 0 && (
         <>
           <SelectInfo
             key="selectYear"
@@ -119,6 +136,7 @@ function InfoCheck(props) {
             title="From which year did you start learning?"
             defaultOption="Select When You Start"
             data={yearData}
+            type="Year"
           />
 
           <Link
@@ -139,14 +157,11 @@ function SelectInfo(props) {
   return (
     <div className="SelectInfo">
       <p className="askCampus">{props.title}</p>
-      <select
-        className="selectBar"
-        onChange={(e) => props.handleChange(e)}
-      >
+      <select className="selectBar" onChange={(e) => props.handleChange(e)}>
         <option value={""}>{props.defaultOption}</option>
         {props.data.map((data) => (
-          <option key={data} value={data}>
-            {data}
+          <option key={data[`${props.type}Id`]} value={data[`${props.type}Id`]}>
+            {data[`${props.type}Name`]}
           </option>
         ))}
       </select>
@@ -158,33 +173,39 @@ function SelectInfo(props) {
 
 const majorObj = [
   {
-    Major_Id: 1,
-    Major_Name: "Systems Development",
+    MajorId: 1,
+    MajorName: "Systems Development",
   },
   {
-    Major_Id: 2,
-    Major_Name: "Business Technology",
+    MajorId: 2,
+    MajorName: "Business Technology",
   },
 ];
 
 const yearObj = [
   {
-    Year: "2017",
+    YearId: "2017",
+    YearName: "2017",
   },
   {
-    Year: "2018",
+    YearId: "2018",
+    YearName: "2018",
   },
   {
-    Year: "2019",
+    YearId: "2019",
+    YearName: "2019",
   },
   {
-    Year: "2020",
+    YearId: "2020",
+    YearName: "2020",
   },
   {
-    Year: "2021",
+    YearId: "2021",
+    YearName: "2021",
   },
   {
-    Year: "2022",
+    YearId: "2022",
+    YearName: "2022",
   },
 ];
 

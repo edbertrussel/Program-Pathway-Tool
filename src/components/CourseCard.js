@@ -13,6 +13,7 @@ function CourseCard(props) {
     item: {
       name: props.courseName,
     },
+
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -28,7 +29,16 @@ function CourseCard(props) {
   // }))
 
   return (
-    <div ref={drag} className="CourseCard">
+    <div
+      ref={drag}
+      className="CourseCard"
+      onDrag={() => {
+        props.onDrag(props.courseName);
+      }}
+      onDragEnd={() => {
+        props.onDragOver();
+      }}
+    >
       {props.courseName}
     </div>
   );

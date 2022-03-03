@@ -77,7 +77,9 @@ header {
   background-color: var(--placeholder-color);
   box-shadow: 0px 0px 4px 1px var(--bright-gray);
 }
-
+.DropBox .box-allowed{
+  background-color: rgb(61, 219, 161,0.5)
+}
 /* Add Year Button */
 .handleYear {
   display: flex;
@@ -157,4 +159,20 @@ button.btn__deleteyear .iconTrashCan {
   background-color: var(--blue);
   box-shadow: 0px 0px 4px 1px var(--bright-gray);
   color: white;
+}
+/* error message */
+.error-msg{
+  font-weight: bolder;
+  margin:15px auto;
+  color:var(--red)
+}
+.warning-msg{
+  font-weight: bolder;
+  margin:15px auto;
+  color:rgb(158, 143, 0);
+}
+.total-credit{
+  font-weight: bolder;
+  margin:15px auto;
+  
 }
