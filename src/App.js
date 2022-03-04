@@ -40,7 +40,7 @@ function App() {
               getDegreeValue="11497"
               getMajor1Value={major1Value}
               getMajor2Value={major2Value}
-              getYearValue="2019"
+              getYearValue="2017"
             />
           }
         />

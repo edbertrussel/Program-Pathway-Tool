@@ -35,7 +35,8 @@ function UserMain(props) {
       url: `http://localhost:5000/api/degree/${props.getDegreeValue}/course`,
     }).then((res) => {
       const courseIDList = res.data.result.map((course) => ({
-        Course_ID: course.Course_ID,
+        courseId: course.Course_ID,
+        courseName: course.Course_Name,
         box: "box__core",
         type: "core",
         unit: course.Unit,
@@ -62,8 +63,9 @@ function UserMain(props) {
       .filter((courseBoxes) => courseBoxes.box === boxName)
       .map((courseBoxes) => (
         <CourseCard
-          key={courseBoxes.Course_ID}
-          courseName={courseBoxes.Course_ID}
+          key={courseBoxes.courseId}
+          courseId={courseBoxes.courseId}
+          courseName={courseBoxes.courseName}
           setCourseBoxes={setCourseBoxes}
           getCourseBoxes={courseBoxes}
           onDrag={onDrag}
@@ -73,7 +75,7 @@ function UserMain(props) {
   };
   const onDrag = (courseId) => {
     const { availability } = courseBoxes.find(
-      (course) => course.Course_ID === courseId
+      (course) => course.courseId === courseId
     );
 
     setAvailability(availability);
@@ -82,7 +84,7 @@ function UserMain(props) {
     setAvailability(null);
   };
 
-  const onDrop = (courseId, boxName) => {
+  const onDrop = (dropId, boxName) => {
     setWarning(null);
     setErrorMsg(null);
     setCourseBoxes((prevBoxes) => {
@@ -90,7 +92,7 @@ function UserMain(props) {
       const dropSemester = parseInt(boxName.substr(-1));
       if (boxName.substr(boxName.length - 4, 3) !== "tri") {
         return prevBoxes.map((Box) => {
-          return courseId === Box.Course_ID
+          return dropId === Box.courseId
             ? { ...Box, box: `box__${Box.type}` }
             : { ...Box };
         });
@@ -99,12 +101,12 @@ function UserMain(props) {
         setErrorMsg("You can only have at most 4 courses in one semester");
         return [...prevBoxes];
       }
-      if (courseId.substr(-1) === "A") {
+      if (dropId.substr(-1) === "A") {
         const partBCourse = prevBoxes.find(
           (course) =>
-            course.Course_ID === `${courseId.substr(0, courseId.length - 1)}B`
+            course.courseId === `${dropId.substr(0, dropId.length - 1)}B`
         );
-        const { box, Course_ID } = partBCourse;
+        const { box, courseId } = partBCourse;
         const PartBCourseYear = box.substr(0, 4);
         const PartBCourseSem = box.substr(-1);
         if (
@@ -117,17 +119,17 @@ function UserMain(props) {
             parseInt(PartBCourseSem) !== 1)
         ) {
           setErrorMsg(
-            `${Course_ID} and ${courseId} must be completed in consecutive terms`
+            `${dropId} and ${dropId} must be completed in consecutive terms`
           );
           return [...prevBoxes];
         }
       }
-      if (courseId.substr(-1) === "B") {
+      if (dropId.substr(-1) === "B") {
         const partACourse = prevBoxes.find(
           (course) =>
-            course.Course_ID === `${courseId.substr(0, courseId.length - 1)}A`
+            course.courseId === `${dropId.substr(0, dropId.length - 1)}A`
         );
-        const { box, Course_ID } = partACourse;
+        const { box, courseId } = partACourse;
         const PartACourseYear = box.substr(0, 4);
         const PartACourseSem = box.substr(-1);
 
@@ -141,7 +143,7 @@ function UserMain(props) {
             parseInt(PartACourseSem) !== 3)
         ) {
           setErrorMsg(
-            `${Course_ID} and ${courseId} must be completed in consecutive terms`
+            `${courseId} and ${courseId} must be completed in consecutive terms`
           );
           return [...prevBoxes];
         }
@@ -156,12 +158,12 @@ function UserMain(props) {
         else return prevVal;
       }, 0);
       const { requiredUnit, assumedKnowledge, availability } = prevBoxes.find(
-        (box) => box.Course_ID === courseId
+        (box) => box.courseId === dropId
       );
 
       if (totalUnit < requiredUnit) {
         setErrorMsg(
-          `${courseId} require you to complete ${requiredUnit} units before enrolled`
+          `${dropId} require you to complete ${requiredUnit} units before enrolled`
         );
 
         return [...prevBoxes];
@@ -174,7 +176,7 @@ function UserMain(props) {
         dropYear <= currentYear
       ) {
         setErrorMsg(
-          `${courseId} is not offered in ${dropYear} Tri ${dropSemester}`
+          `${dropId} is not offered in ${dropYear} Tri ${dropSemester}`
         );
         return [...prevBoxes];
       }
@@ -183,14 +185,12 @@ function UserMain(props) {
         assumedKnowledge[0].Alternative1 ||
         assumedKnowledge[0].Alternative2
       ) {
-        let message = `For ${courseId},Please make sure you have completed the following courses before enrolled`;
+        let message = `For ${dropId},Please make sure you have completed the following courses before enrolled`;
         setWarning({ message, data: assumedKnowledge });
       }
 
       return prevBoxes.map((Box) => {
-        return courseId === Box.Course_ID
-          ? { ...Box, box: boxName }
-          : { ...Box };
+        return dropId === Box.courseId ? { ...Box, box: boxName } : { ...Box };
       });
     });
     onDragOver();
@@ -198,7 +198,6 @@ function UserMain(props) {
   const startYear = parseInt(props.getYearValue);
 
   const onAddClick = (e) => {
-    console.log(courseBoxes);
     // Check maximum year number (if you want 6 years maximum: > 6)
     if (yearNumber.length + 1 > maxYear) {
       e.preventDefault();
@@ -232,7 +231,7 @@ function UserMain(props) {
         {
           <div className="total-credit">
             <h1></h1>
-            Current Credit: {currentCredit} / {totalCredit}
+            Current Credit: {currentCredit} / {totalCredit} units
           </div>
         }
         {errorMsg && (
@@ -339,17 +338,17 @@ function DropBox(props) {
 
   const [{ isOver }, drop__tri1] = useDrop(() => ({
     accept: "course",
-    drop: (item) => props.onDrop(item.name, props.getYearValue + "__tri1"),
+    drop: (item) => props.onDrop(item.id, props.getYearValue + "__tri1"),
   }));
 
   const [, drop__tri2] = useDrop(() => ({
     accept: "course",
-    drop: (item) => props.onDrop(item.name, props.getYearValue + "__tri2"),
+    drop: (item) => props.onDrop(item.id, props.getYearValue + "__tri2"),
   }));
 
   const [, drop__tri3] = useDrop(() => ({
     accept: "course",
-    drop: (item) => props.onDrop(item.name, props.getYearValue + "__tri3"),
+    drop: (item) => props.onDrop(item.id, props.getYearValue + "__tri3"),
   }));
 
   return (
