@@ -13,7 +13,7 @@ function TabComponent() {
             <div
               key={tab + index}
               className={cssClass}
-              onClick={() => {
+              onClick={() => { 
                 setSelectedTab(tab);
               }}
             >
