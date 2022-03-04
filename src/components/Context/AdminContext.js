@@ -40,6 +40,7 @@ function AdminContextProvider({ children }) {
       })
       .catch((err) => {
         console.log(err);
+        setFilterOption([]);
       });
   }, [selectedTab]);
 
