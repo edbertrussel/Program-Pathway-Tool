@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { text } from '@fortawesome/fontawesome-svg-core';
-//import HttpRequest from "../../../HttpRequest";
+import logo from "../../../logo.png";
+import "./AdminLogin.css";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 
 function AdminLogin() {
@@ -24,32 +27,30 @@ function AdminLogin() {
         alert(res.data.status);
     })
     .catch( error => {
-      alert(error.response.data.error);
+      // alert(error.response.data.error);
       setLoginStatus('ID or Password is incorrect!');
     })
   }; 
 
   return (
-    <form>
-      <div className='form-inner'>
+    <div className='container'>
+    <img src={logo} className="logo"></img>
 
-        <h2>Login</h2>
+      <form className='login_form'>
 
-        <div className='form-group'>
-          <label>Name:</label>
-          <input type='text' onChange={(e)=> {setAdminId(e.target.value)}} />
-        </div>
+        <div className='font'>Admin ID</div>
+        <input type='text' onChange={(e)=> {setAdminId(e.target.value)}} />
 
-        <div className='form-group'>
-          <label>Password:</label>
-          <input type='password' onChange={(e)=> {setPassword(e.target.value)}} />
-        </div>
+        <div className='font font2'>Password</div>
+        <input type='password' onChange={(e)=> {setPassword(e.target.value)}} />
 
         <button type='submit' disabled={!validateForm()} onClick={Login}> Login </button>
-         
-        <h1>{loginStatus}</h1>
-      </div>
-    </form>
+
+        <div className='errormsg'>{loginStatus}</div>
+
+      </form>
+
+    </div>
   )
 }
 
