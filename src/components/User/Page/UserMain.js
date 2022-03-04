@@ -34,8 +34,7 @@ function UserMain() {
                 <>
                   <DropBox
                     key={startYear + i}
-                    getYearValue={startYear + i}
-                    setBoxForCourse={setBoxForCourse}
+                    year={startYear + i}
                   />
                 </>
               ))}

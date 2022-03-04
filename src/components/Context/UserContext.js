@@ -128,8 +128,6 @@ function UserContextProvider({ children }) {
         <CourseCard
           key={courseBoxes.Course_ID}
           courseName={courseBoxes.Course_ID}
-          setCourseBoxes={setCourseBoxes}
-          getCourseBoxes={courseBoxes}
         />
       ))
   }
