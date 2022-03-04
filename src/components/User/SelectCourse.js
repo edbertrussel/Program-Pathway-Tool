@@ -1,10 +1,8 @@
-import "./SelectCourse.css";
-import React from "react";
-import { useDrop } from "react-dnd";
+import CourseBox from "./CourseBox.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-function SelectCourse(props) {
+function SelectCourse() {
   return (
     <div className="SelectCourse">
       <div className="contentHeader">
@@ -33,36 +31,16 @@ function SelectCourse(props) {
         </div>
         <div className="courseBox">
           <CourseBox
-            setBoxForCourse={props.setBoxForCourse}
             type="core"
-            onDrop={props.onDrop}
           ></CourseBox>
           <CourseBox
-            setBoxForCourse={props.setBoxForCourse}
             type="major1"
-            onDrop={props.onDrop}
           ></CourseBox>
           <CourseBox
             type="major2"
-            setBoxForCourse={props.setBoxForCourse}
-            onDrop={props.onDrop}
           ></CourseBox>
         </div>
       </div>
-    </div>
-  );
-}
-
-function CourseBox({ type, onDrop, setBoxForCourse }) {
-  
-  const [, drop] = useDrop(() => ({
-    accept: "course",
-    drop: (item) => onDrop(item.name, `box__${type}`),
-  }));
-
-  return (
-    <div ref={drop} className={`box__${type}`}>
-      {setBoxForCourse(`box__${type}`)}
     </div>
   );
 }

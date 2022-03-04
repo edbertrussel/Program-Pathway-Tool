@@ -1,3 +1,4 @@
+import CourseCard from "../User/CourseCard";
 import React from "react";
 import { useContext, useState, useEffect } from "react";
 import HttpRequest from "../../HttpRequest";
@@ -18,6 +19,25 @@ function UserContextProvider({ children }) {
   const [isCampusSelected, setCampusSelected] = useState(false);
   const [isDegreeSelected, setDegreeSelected] = useState(false);
   const [isMajorSelected, setMajorSelected] = useState(false);
+  const [yearCount, setYearCount] = useState([0, 1]);
+  const [courseBoxes, setCourseBoxes] = useState([
+    {
+      Course_ID: "SENG1050",
+      box: "box__core",
+    },
+    {
+      Course_ID: "COMP1140",
+      box: "box__core",
+    },
+    {
+      Course_ID: "SENG2130",
+      box: "box__core",
+    },
+    {
+      Course_ID: "COMP1010",
+      box: "2018__tri1",
+    },
+  ]);
 
   async function getCampusData() {
     try {
@@ -100,6 +120,30 @@ function UserContextProvider({ children }) {
     setUserInfo({ ...userInfo, startYear: e.target.value });
   };
 
+  // Following 'courseBoxes' state value, render <CourseCard> corresponding box
+  const setBoxForCourse = (boxName) => {
+    return courseBoxes
+      .filter((courseBoxes) => courseBoxes.box === boxName)
+      .map((courseBoxes) => (
+        <CourseCard
+          key={courseBoxes.Course_ID}
+          courseName={courseBoxes.Course_ID}
+          setCourseBoxes={setCourseBoxes}
+          getCourseBoxes={courseBoxes}
+        />
+      ))
+  }
+
+  const onDrop = (courseId, boxName) => {
+    setCourseBoxes((prevBoxes) => {
+      return prevBoxes.map((Box) => {
+        return courseId === Box.Course_ID
+          ? { ...Box, box: boxName }
+          : { ...Box };
+      });
+    });
+  };
+
   const onInfoConfirmClick = (e) => {
     if (userInfo.campus === '' || userInfo.degree === '' || userInfo.major === '' || userInfo.startYear === '') {
       e.preventDefault();
@@ -107,11 +151,35 @@ function UserContextProvider({ children }) {
     }
   };
 
+  const onYearAddClick = (e) => {
+    // Check maximum year number (if you want 6 years maximum: > 6)
+    if (yearCount.length + 1 > 5) {
+      e.preventDefault();
+      alert("5 years Maximum!");
+      return;
+    }
+
+    setYearCount(yearCount.concat([yearCount.length]));
+  };
+
+  const onYearDeleteClick = (e) => {
+    // Check minimum year number
+    if (yearCount.length - 1 < 2) {
+      e.preventDefault();
+      alert("2 years Minimum!");
+      return;
+    }
+
+    const deletedList = yearCount.filter(
+      (idx) => idx < yearCount.length - 1
+    );
+    setYearCount(deletedList);
+  };
+
   return (
     <UserContext.Provider
       value={{
         userInfo,
-        getCampusData,
         campusData,
         degreeData,
         majorData,
@@ -119,11 +187,17 @@ function UserContextProvider({ children }) {
         isCampusSelected,
         isDegreeSelected,
         isMajorSelected,
+        yearCount,
+        getCampusData,
         handleCampusChange,
         handleDegreeChange,
         handleMajorChange,
         handleYearChange,
+        setBoxForCourse,
+        onDrop,
         onInfoConfirmClick,
+        onYearAddClick,
+        onYearDeleteClick,
       }}
     >
       {children}
