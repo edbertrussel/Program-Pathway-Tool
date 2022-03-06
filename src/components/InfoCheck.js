@@ -61,10 +61,15 @@ function InfoCheck(props) {
     );
   };
 
-  const handleDegreeChange = (e) => {
+  const handleDegreeChange = async (e) => {
     props.setDegreeValue(e.target.value);
 
-    setMajorData(majorObj);
+    setMajorData(
+      await getData(
+        `http://localhost:5000/api/degree/${e.target.value}/major`,
+        "Major"
+      )
+    );
   };
 
   const handleMajor1Change = (e) => {

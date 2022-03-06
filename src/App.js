@@ -36,11 +36,11 @@ function App() {
           path="/usermain"
           element={
             <UserMain
-              getCampusValue="SG001"
-              getDegreeValue="11497"
+              getCampusValue={campusValue}
+              getDegreeValue={degreeValue}
               getMajor1Value={major1Value}
               getMajor2Value={major2Value}
-              getYearValue="2017"
+              getYearValue={yearValue}
             />
           }
         />

@@ -56,7 +56,7 @@ function SelectCourse(props) {
 function CourseBox({ type, onDrop, setBoxForCourse }) {
   const [, drop] = useDrop(() => ({
     accept: "course",
-    drop: (item) => onDrop(item.name, `box__${type}`),
+    drop: (item) => onDrop(item.id, `box__${type}`),
   }));
   return (
     <div ref={drop} className={`box__${type}`}>

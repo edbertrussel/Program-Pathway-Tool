@@ -22,31 +22,72 @@ function UserMain(props) {
   const [currentCredit, setCurrentCredit] = useState(0);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/api/degree/${props.getDegreeValue}`,
-    }).then((res) => {
-      const { Max_Year, Total_Credit } = res.data.result;
+    async function getData() {
+      const degreeRes = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/degree/${props.getDegreeValue}`,
+      });
+      const { Max_Year, Total_Credit } = degreeRes.data.result;
       setMaxYear(Max_Year);
       setTotalCredit(Total_Credit);
-    });
-    axios({
-      method: "GET",
-      url: `http://localhost:5000/api/degree/${props.getDegreeValue}/course`,
-    }).then((res) => {
-      const courseIDList = res.data.result.map((course) => ({
-        courseId: course.Course_ID,
-        courseName: course.Course_Name,
-        box: "box__core",
-        type: "core",
-        unit: course.Unit,
-        requiredUnit: course.Required_Unit,
-        assumedKnowledge: course.Assumed_Knowledge,
-        availability: course.Availability,
-      }));
-
+      let courseIDList = [];
+      const degreeCourseRes = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/degree/${props.getDegreeValue}/course`,
+      });
+      const major1CourseRes = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/major/${props.getMajor1Value}/course`,
+      });
+      const major2CourseRes =
+        props.getMajor2Value === ""
+          ? null
+          : await axios({
+              method: "GET",
+              url: `http://localhost:5000/api/major/${props.getMajor2Value}/course`,
+            });
+      const major2Courses = major2CourseRes
+        ? [
+            ...major2CourseRes.data.result.map((course) => ({
+              courseId: course.Course_ID,
+              courseName: course.Course_Name,
+              box: "box__major2",
+              type: "major2",
+              unit: course.Unit,
+              requiredUnit: course.Required_Unit,
+              assumedKnowledge: course.Assumed_Knowledge,
+              availability: course.Availability,
+            })),
+          ]
+        : [];
+      courseIDList = [
+        ...courseIDList,
+        ...degreeCourseRes.data.result.map((course) => ({
+          courseId: course.Course_ID,
+          courseName: course.Course_Name,
+          box: "box__core",
+          type: "core",
+          unit: course.Unit,
+          requiredUnit: course.Required_Unit,
+          assumedKnowledge: course.Assumed_Knowledge,
+          availability: course.Availability,
+        })),
+        ...major1CourseRes.data.result.map((course) => ({
+          courseId: course.Course_ID,
+          courseName: course.Course_Name,
+          box: "box__major1",
+          type: "major1",
+          unit: course.Unit,
+          requiredUnit: course.Required_Unit,
+          assumedKnowledge: course.Assumed_Knowledge,
+          availability: course.Availability,
+        })),
+        ...major2Courses,
+      ];
+      console.log(courseIDList);
       setCourseBoxes(courseIDList);
-    });
+    }
+    getData();
   }, []);
   useEffect(() => {
     setCurrentCredit(
@@ -88,9 +129,10 @@ function UserMain(props) {
     setWarning(null);
     setErrorMsg(null);
     setCourseBoxes((prevBoxes) => {
-      const dropYear = parseInt(boxName.substr(0, 4));
-      const dropSemester = parseInt(boxName.substr(-1));
+      const dropYear = parseInt(boxName.substr(0, 4)); //get the year from boxName eg 2018_tri1 -> 2018
+      const dropSemester = parseInt(boxName.substr(-1)); //eg 2018_tri1 -> 1
       if (boxName.substr(boxName.length - 4, 3) !== "tri") {
+        //if user aint drop in dropBox, return the courseCard to its original box
         return prevBoxes.map((Box) => {
           return dropId === Box.courseId
             ? { ...Box, box: `box__${Box.type}` }
@@ -98,11 +140,14 @@ function UserMain(props) {
         });
       }
       if (prevBoxes.filter((course) => course.box === boxName).length > 3) {
+        //restrict to at most 4 courses in one semester
         setErrorMsg("You can only have at most 4 courses in one semester");
         return [...prevBoxes];
       }
       if (dropId.substr(-1) === "A") {
+        // for course that the last character is A or B, meaning it is consequtive course
         const partBCourse = prevBoxes.find(
+          //get the obj of part B course to know its current postion
           (course) =>
             course.courseId === `${dropId.substr(0, dropId.length - 1)}B`
         );
@@ -110,7 +155,7 @@ function UserMain(props) {
         const PartBCourseYear = box.substr(0, 4);
         const PartBCourseSem = box.substr(-1);
         if (
-          (box.substr(box.length - 4, 3) === "tri" &&
+          (box.substr(box.length - 4, 3) === "tri" && //
             parseInt(PartBCourseYear) !== dropYear &&
             parseInt(PartBCourseYear) !== dropYear + 1) ||
           (parseInt(PartBCourseYear) === dropYear &&
@@ -119,7 +164,7 @@ function UserMain(props) {
             parseInt(PartBCourseSem) !== 1)
         ) {
           setErrorMsg(
-            `${dropId} and ${dropId} must be completed in consecutive terms`
+            `${dropId} and ${courseId} must be completed in consecutive terms`
           );
           return [...prevBoxes];
         }
@@ -127,7 +172,7 @@ function UserMain(props) {
       if (dropId.substr(-1) === "B") {
         const partACourse = prevBoxes.find(
           (course) =>
-            course.courseId === `${dropId.substr(0, dropId.length - 1)}A`
+            course.courseId === `${dropId.substr(0, dropId.length - 1)}A` //get part A course instance
         );
         const { box, courseId } = partACourse;
         const PartACourseYear = box.substr(0, 4);
@@ -143,20 +188,22 @@ function UserMain(props) {
             parseInt(PartACourseSem) !== 3)
         ) {
           setErrorMsg(
-            `${courseId} and ${courseId} must be completed in consecutive terms`
+            `${courseId} and ${dropId} must be completed in consecutive terms`
           );
           return [...prevBoxes];
         }
       }
       const totalUnit = prevBoxes.reduce((prevVal, curVal) => {
+        //calculate the total unit that
         if (
-          curVal.box.substr(0, 4) < dropYear ||
-          (curVal.box.substr(0, 4) === dropYear &&
-            curVal.box.substr(-1) < dropSemester)
+          parseInt(curVal.box.substr(0, 4)) < dropYear ||
+          (parseInt(curVal.box.substr(0, 4)) === dropYear &&
+            parseInt(curVal.box.substr(-1)) < dropSemester)
         )
           return (prevVal = prevVal + curVal.unit);
         else return prevVal;
       }, 0);
+      console.log(totalUnit);
       const { requiredUnit, assumedKnowledge, availability } = prevBoxes.find(
         (box) => box.courseId === dropId
       );
@@ -168,6 +215,8 @@ function UserMain(props) {
 
         return [...prevBoxes];
       }
+      //We assume that the course is offered on every semester
+      //if the year > current year AND there is no availability data found from database for the specific year
       const currentYear = new Date().getFullYear();
       if (
         availability.findIndex(
@@ -181,6 +230,7 @@ function UserMain(props) {
         return [...prevBoxes];
       }
       if (
+        //display all assume knowledge
         assumedKnowledge.length !== 1 ||
         assumedKnowledge[0].Alternative1 ||
         assumedKnowledge[0].Alternative2
