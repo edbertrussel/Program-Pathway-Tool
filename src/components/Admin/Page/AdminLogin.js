@@ -3,8 +3,7 @@ import axios from 'axios';
 import { text } from '@fortawesome/fontawesome-svg-core';
 import logo from "../../../logo.png";
 import "./AdminLogin.css";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import { Navigate } from "react-router-dom";
 
 
 function AdminLogin() {
@@ -12,6 +11,8 @@ function AdminLogin() {
   const  [adminId, setAdminId] = useState('')
   const  [password, setPassword] = useState('')
   const  [loginStatus, setLoginStatus] = useState('')
+  state = { redirect: false }
+
 
   function validateForm() {
     return text.length > 0 && password.length > 0;
@@ -24,14 +25,15 @@ function AdminLogin() {
       adminId: adminId,
       password: password
     }).then( res => {
-        alert(res.data.status);
-    })
+       alert(res.data.status);
+
+    }) 
     .catch( error => {
       // alert(error.response.data.error);
       setLoginStatus('ID or Password is incorrect!');
     })
   }; 
-
+  
   return (
     <div className='container'>
     <img src={logo} className="logo"></img>
