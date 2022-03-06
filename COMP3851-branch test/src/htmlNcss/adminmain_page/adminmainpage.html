@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Main Page</title>
+    <script src="https://kit.fontawesome.com/f68cbb09ac.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./adminmainpage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <img src="./logo.png" alt="UoN MyPath">
+        <button class="logoutbtn">
+            <i class="fas fa-sign-out-alt fa-lg"></i>
+            <span>Log out</span>
+        </button>
+    </header>
+    <div class="content">
+        <div class="filter">
+            <div class="title">Filter</div>
+            <div id="availability" class="filtertype">
+                <span class="title">Availability</span>
+                <div class="option">
+                    <input type="checkbox" name="availability" id="tri1">
+                    <span>Trimester1</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="availability" id="tri2">
+                    <span>Trimester2</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="availability" id="tri3">
+                    <span>Trimester3</span>
+                </div>
+            </div>
+            <div id="level" class="filtertype">
+                <span class="title">Level</span>
+                <div class="option">
+                    <input type="checkbox" name="level" id="1000">
+                    <span>1000</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="level" id="2000">
+                    <span>2000</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="level" id="3000">
+                    <span>3000</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="level" id="4000">
+                    <span>4000</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="level" id="5000">
+                    <span>5000</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="level" id="6000">
+                    <span>6000</span>
+                </div>
+            </div>
+            <div id="units" class="filtertype">
+                <span class="title">Units</span>
+                <div class="option">
+                    <input type="checkbox" name="units" id="10">
+                    <span>10</span>
+                </div>
+                <div class="option">
+                    <input type="checkbox" name="units" id="20">
+                    <span>20</span>
+                </div>
+            </div>
+        </div>
+        <div class="maincontent">
+            <div class="top">
+                <div class="searchbar">
+                    <input type="text" class="searchinput" placeholder="Search"></input>
+                        <button class="searchbtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                </div>
+                <div class="buttons">
+                    <button class="back">Back</button>
+                    <button class="delete">Delete</button>
+                    <button class="additem">Add Item</button>
+                </div>
+            </div>
+            <div class="contenttable">
+                <div class="itemtypebuttons">
+                    <button class="campus">Campus</button>
+                    <button class="degree">Degree</button>
+                    <button class="course">Course</button>
+                </div>
+                <div class="resulttable">
+                    <div class="tabletop">
+                        <span class="result">Result</span>
+                        <span class="edit">Edit</span>
+                        <span class="select">Select</span>
+                    </div>
+                    <div class="item" id="1">
+                        <span class="number">1</span>
+                        <span class="code">COMP 1010</span>
+                        <div class="name">Computing Fundamentals</div>
+                        <button class="edit">
+                            <i class="far fa-edit"></i>
+                        </button>
+                        <input type="checkbox" class="select">
+                    </div>   
+                    <div class="item" id="2">
+                        <span class="number">2</span>
+                        <span class="code">COMP 1140</span>
+                        <div class="name">Database and Information Management</div>
+                        <button class="edit">
+                            <i class="far fa-edit"></i>
+                        </button>
+                        <input type="checkbox" class="select">
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

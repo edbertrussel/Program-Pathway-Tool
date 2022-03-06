@@ -1,0 +1,178 @@
+.UserMain {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.maincontent {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  padding: 10px 30px;
+}
+
+.logo {
+  width: 200px;
+}
+
+/* Drop Table */
+
+.droptable {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Table Header */
+.droptable .tableHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.droptable .tableHeader .header__year {
+  padding: 10px;
+  width: 100px;
+  text-align: center;
+}
+
+.droptable .tableHeader .header__tri {
+  padding: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+/* Dropboxes */
+.DropBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.DropBox .box__year {
+  margin: var(--dropcontent-margin);
+  width: 100px;
+  line-height: 120px;
+  text-align: center;
+  font-size: 25px;
+}
+
+.DropBox .box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: var(--dropcontent-margin);
+  width: 300px;
+  height: 120px;
+  border-radius: 5px;
+  background-color: var(--placeholder-color);
+  box-shadow: 0px 0px 4px 1px var(--bright-gray);
+}
+.DropBox .box-allowed{
+  background-color: rgb(61, 219, 161,0.5)
+}
+/* Add Year Button */
+.handleYear {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.handleYear .blank {
+  width: 110px;
+}
+
+button.btn__addYear {
+  margin: var(--dropcontent-margin);
+  width: calc(860px + var(--dropcontent-margin) * 4);
+  height: 30px;
+  color: var(--dark-gray);
+  font-weight: bolder;
+  background-color: var(--placeholder-color);
+  box-shadow: 0px 0px 4px 1px var(--bright-gray);
+}
+
+button.btn__addYear:active {
+  background-color: var(--bright-gray);
+}
+
+/* Delete Year Button */
+button.deleteYear {
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  width: 30px;
+}
+
+button.btn__deleteyear {
+  background-color: var(--placeholder-color);
+  box-shadow: 0px 0px 4px 1px var(--bright-gray);
+  height: 30px;
+  width: 30px;
+}
+
+button.btn__deleteyear:active {
+  background-color: var(--bright-gray);
+}
+
+button.btn__deleteyear .iconTrashCan {
+  color: var(--red);
+}
+
+/* Show My Path & Back buttons */
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.buttons .blank {
+  width: 750px;
+}
+
+/* Back button */
+.buttons .link__back {
+  margin: var(--dropcontent-margin);
+  width: 200px;
+  width: 100px;
+  height: 35px;
+  background-color: var(--gray);
+  box-shadow: 0px 0px 4px 1px var(--bright-gray);
+  color: white;
+}
+
+/* Show My Path button */
+.buttons .btn__showpath {
+  margin: var(--dropcontent-margin);
+  width: 200px;
+  height: 35px;
+  background-color: var(--blue);
+  box-shadow: 0px 0px 4px 1px var(--bright-gray);
+  color: white;
+}
+/* error message */
+.error-msg{
+  font-weight: bolder;
+  margin:15px auto;
+  color:var(--red)
+}
+.warning-msg{
+  font-weight: bolder;
+  margin:15px auto;
+  color:rgb(158, 143, 0);
+}
+.total-credit{
+  font-weight: bolder;
+  margin:15px auto;
+  
+}
