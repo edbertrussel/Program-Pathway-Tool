@@ -8,8 +8,8 @@ function SelectInfo(props) {
       >
         <option value={""}>{props.defaultOption}</option>
         {props.data.map((data) => (
-          <option key={data} value={data}>
-            {data}
+          <option key={data[`${props.type}Id`]} value={data[`${props.type}Id`]}>
+            {data[`${props.type}Name`]}
           </option>
         ))}
       </select>

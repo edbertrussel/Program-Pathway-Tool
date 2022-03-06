@@ -12,12 +12,10 @@ function InfoCheck() {
     degreeData,
     majorData,
     yearData,
-    isCampusSelected,
-    isDegreeSelected,
-    isMajorSelected,
     handleCampusChange,
     handleDegreeChange,
-    handleMajorChange,
+    handleMajor1Change,
+    handleMajor2Change,
     handleYearChange,
     onInfoConfirmClick
   } = useUserContext();
@@ -35,8 +33,9 @@ function InfoCheck() {
         title="Which Campus Are You Studying At?"
         defaultOption="Select Your Campus"
         data={campusData}
+        type="Campus"
       />
-      {isCampusSelected && (
+      {degreeData.length !== 0 && (
         <>
           <SelectInfo
             key="selectDegree"
@@ -44,21 +43,31 @@ function InfoCheck() {
             title="Which degree are you learning?"
             defaultOption="Select Your Degree"
             data={degreeData}
+            type="Degree"
           />
         </>
       )}
-      {isDegreeSelected && (
+      {majorData.length !== 0 && (
         <>
           <SelectInfo
-            key="selectMajor"
-            handleChange={(e) => handleMajorChange(e)}
+            key="selectMajor1"
+            handleChange={(e) => handleMajor1Change(e)}
             title="Which major are you in?"
             defaultOption="Select Your Major"
             data={majorData}
+            type="Major"
+          />
+          <SelectInfo
+            key="selectMajor2"
+            handleChange={(e) => handleMajor2Change(e)}
+            title="Major 2 (if any)?"
+            defaultOption="Select Your Major2"
+            data={majorData}
+            type="Major"
           />
         </>
       )}
-      {isMajorSelected && (
+      {majorData.length !== 0 && (
         <>
           <SelectInfo
             key="selectYear"
@@ -66,6 +75,7 @@ function InfoCheck() {
             title="From which year did you start learning?"
             defaultOption="Select When You Start"
             data={yearData}
+            type="Year"
           />
 
           <Link
