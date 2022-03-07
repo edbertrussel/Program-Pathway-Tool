@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { text } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import logo from "../../../logo.png";
 import "./AdminLogin.css";
 import { useNavigate } from "react-router-dom";
@@ -45,23 +47,33 @@ function AdminLogin() {
   }, [redirect]);
 
   return (
-    <div className='container'>
-      <img src={logo} className="logo"></img>
+    <div className='AdminLogin'>
+      <div className='container'>
+        <img src={logo} className="logo"></img>
 
-      <form className='login_form'>
+        <form className='login_form'>
 
-        <div className='font'>Admin ID</div>
-        <input type='text' onChange={(e) => { setAdminId(e.target.value) }} />
+          <div className='font'>Admin ID</div>
+          <input type='text' onChange={(e) => { setAdminId(e.target.value) }} />
 
-        <div className='font font2'>Password</div>
-        <input type='password' onChange={(e) => { setPassword(e.target.value) }} />
+          <div className='font font2'>Password</div>
+          <input type='password' onChange={(e) => { setPassword(e.target.value) }} />
 
-        <button type='submit' disabled={!validateForm()} onClick={Login}> Login </button>
-
-        <div className='errormsg'>{loginStatus}</div>
-
-      </form>
-
+          <button type='submit' disabled={!validateForm()} onClick={Login}> Login </button>
+          {
+            loginStatus && (
+              <>
+                <div className='errormsg'>
+                  <FontAwesomeIcon
+                    icon={faCircleXmark}
+                    style={{ paddingRight: "5px" }}
+                  ></FontAwesomeIcon>
+                  {loginStatus}
+                </div>
+              </>
+            )}
+        </form>
+      </div>
     </div>
   )
 }

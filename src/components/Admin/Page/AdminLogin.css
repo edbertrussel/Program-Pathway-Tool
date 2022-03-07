@@ -1,13 +1,7 @@
-* {
-  padding: 0;
-  margin: 0;
-}
-
-body {
+.AdminLogin {
   align-items: center;
   justify-content: center;
   display: flex;
-  font-family: sans-serif;
 }
 
 .container {
@@ -15,7 +9,6 @@ body {
   margin-top: 100px;
   width: 450px;
   height: auto;
-  /*background;*/
   border-radius: 5px;
 }
 
@@ -28,20 +21,20 @@ body {
 }
 
 .login_form {
-  padding: 20px 40px;
+  padding: 60px 40px;
 }
 
 .login_form .font {
-  font-size: 16px;
-  color: #130f40;
+  font-size: 15px;
+  font-weight: bold;
   margin: 5px 0;
 }
 
 .login_form input {
-  height: 40px;
+  height: 35px;
   width: 350px;
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 15px;
   outline: none;
   border: 1px solid silver;
 }
@@ -52,35 +45,32 @@ body {
 
 .login_form button {
   margin: 45px 0 30px 0;
-  height: 45px;
+  height: 40px;
   width: 360px;
   font-size: 18px;
   color: white;
   outline: none;
-  cursor: pointer;
   font-weight: bold;
-  background: #0096ff;
+  background: var(--blue);
   border-radius: 3px;
-  border: 1px solid #0096ff;
 }
 
-.login_form button:hover {
-  /*     background: white;
-  color: #0096FF */
+/* .login_form button:hover {
   width: 361px;
   height: 46px;
   font-size: 19px;
-}
+} */
 
 .login_form .errormsg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 5px;
   width: 360px;
-  font-size: 18px;
-  color: #c62828;
-  background: rgba(255, 0, 0, 0.1);
-  text-align: center;
-  /* padding: 5px 8px; */
+  height: 35px;
+  font-size: 15px;
+  font-weight: bolder;
+  color: white;
+  background: var(--red);
   border-radius: 3px;
-  /* border: 1px solid #ef9a9a; */
-  /* display: none; */
 }
