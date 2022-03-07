@@ -8,9 +8,10 @@ function SelectCourse() {
       <div className="contentHeader">
         <div className="searchBox">
           <input
-            type="text"
-            className="input__search"
             placeholder="Search"
+            className="input__search"
+            type="text"
+            size="50"
           ></input>
           <button className="btn__search">
             <FontAwesomeIcon

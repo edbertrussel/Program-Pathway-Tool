@@ -8,7 +8,14 @@
 
 .InfoCheck .logo {
   width: 300px;
-  padding-bottom: 50px;
+  margin: 0;
+  padding-bottom: 30px;
+}
+
+.select-error {
+  height: 20px;
+  font-weight: bolder;
+  color: var(--red);
 }
 
 .SelectInfo {
@@ -25,7 +32,7 @@
 .selectBar {
   width: 300px;
   height: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   padding: 0.2em 0.2em;
   background-color: var(--bright-gray);
   border: none;

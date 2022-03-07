@@ -4,14 +4,18 @@ import logo from "../../../logo.png"
 import "./InfoCheck.css";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 
 function InfoCheck() {
   const {
     getCampusData,
     campusData,
     degreeData,
-    majorData,
+    major1Data,
+    major2Data,
     yearData,
+    selectErrorMsg,
     handleCampusChange,
     handleDegreeChange,
     handleMajor1Change,
@@ -27,6 +31,17 @@ function InfoCheck() {
   return (
     <div className="InfoCheck">
       <img src={logo} className="logo" alt="logo" />
+      {selectErrorMsg && (
+        <>
+          <div className="select-error">
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              style={{ paddingRight: "5px" }}
+            ></FontAwesomeIcon>
+            Please select all items!
+          </div>
+        </>
+      )}
       <SelectInfo
         key="selectCampus"
         handleChange={(e) => handleCampusChange(e)}
@@ -47,27 +62,31 @@ function InfoCheck() {
           />
         </>
       )}
-      {majorData.length !== 0 && (
+      {major1Data.length !== 0 && (
         <>
           <SelectInfo
             key="selectMajor1"
             handleChange={(e) => handleMajor1Change(e)}
             title="Which major are you in?"
             defaultOption="Select Your Major"
-            data={majorData}
+            data={major1Data}
             type="Major"
           />
+        </>
+      )}
+      {major2Data.length !== 0 && (
+        <>
           <SelectInfo
             key="selectMajor2"
             handleChange={(e) => handleMajor2Change(e)}
             title="Major 2 (if any)?"
             defaultOption="Select Your Major2"
-            data={majorData}
+            data={major2Data}
             type="Major"
           />
         </>
       )}
-      {majorData.length !== 0 && (
+      {yearData.length !== 0 && (
         <>
           <SelectInfo
             key="selectYear"
@@ -88,7 +107,7 @@ function InfoCheck() {
           </Link>
         </>
       )}
-    </div>
+    </div >
   );
 }
 

@@ -14,11 +14,13 @@ function UserContextProvider({ children }) {
   });
   const [campusData, setCampusData] = useState([]);
   const [degreeData, setDegreeData] = useState([]);
-  const [majorData, setMajorData] = useState([]);
+  const [major1Data, setMajor1Data] = useState([]);
+  const [major2Data, setMajor2Data] = useState([]);
   const [yearData, setYearData] = useState([]);
   const [yearCount, setYearCount] = useState([0, 1]);
   const [courseBoxes, setCourseBoxes] = useState([]);
   const [DragAvailablity, setAvailability] = useState(null);
+  const [selectErrorMsg, setSelectErrorMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [warning, setWarning] = useState(null);
   const [maxYear, setMaxYear] = useState(5);
@@ -60,7 +62,7 @@ function UserContextProvider({ children }) {
   };
   async function handleDegreeChange(e) {
     setUserInfo({ ...userInfo, degree: e.target.value });
-    setMajorData(
+    setMajor1Data(
       await getInfoData(
         `http://localhost:5000/api/degree/${e.target.value}/major`,
         "Major"
@@ -69,6 +71,9 @@ function UserContextProvider({ children }) {
   };
   function handleMajor1Change(e) {
     setUserInfo({ ...userInfo, major1: e.target.value });
+
+    //Option that is selected in major1 does not appear on major2 list
+    setMajor2Data(major1Data.filter(arr => arr.MajorId.toString() !== e.target.value));
 
     setYearData(yearObj);
   };
@@ -79,6 +84,7 @@ function UserContextProvider({ children }) {
     setUserInfo({ ...userInfo, startYear: e.target.value });
   };
 
+  // Check all required options are selected
   function onInfoConfirmClick(e) {
     if (
       userInfo.campus === '' ||
@@ -87,16 +93,18 @@ function UserContextProvider({ children }) {
       userInfo.startYear === ''
     ) {
       e.preventDefault();
-      alert("Please select all items!");
+      setSelectErrorMsg("Please select all items!");
     }
   };
 
   // -----For <UserMain> Pages-------------------------------------------------------
-  async function getCourseCardData() {
+  // Get course data according to the selected option
+  async function getCourseCardData(paramObj = {}) {
     const degreeRes = await axios({
       method: "GET",
       url: `http://localhost:5000/api/degree/${userInfo.degree}`,
     });
+
     const { Max_Year, Total_Credit } = degreeRes.data.result;
     setMaxYear(Max_Year);
     setTotalCredit(Total_Credit);
@@ -158,6 +166,7 @@ function UserContextProvider({ children }) {
     setCourseBoxes(courseIDList);
   };
 
+  // Calculate current credit amount 
   function calCredit() {
     setCurrentCredit(
       courseBoxes.reduce((prevVal, curVal) => {
@@ -172,7 +181,7 @@ function UserContextProvider({ children }) {
     // Check maximum year number (if you want 6 years maximum: > 6)
     if (yearCount.length + 1 > maxYear) {
       e.preventDefault();
-      alert(maxYear + " years Maximum!");
+      setErrorMsg(maxYear + " years Maximum!");
       return;
     }
 
@@ -183,7 +192,7 @@ function UserContextProvider({ children }) {
     // Check minimum year number
     if (yearCount.length - 1 < 2) {
       e.preventDefault();
-      alert("2 years Minimum!");
+      setErrorMsg("2 years Minimum!");
       return;
     }
 
@@ -193,6 +202,7 @@ function UserContextProvider({ children }) {
     setYearCount(deletedList);
   };
 
+  // When go back to <InfoCheck> page, reset user info, error message and warning
   function onBackClick() {
     setUserInfo({
       campus: '',
@@ -203,6 +213,7 @@ function UserContextProvider({ children }) {
     });
     setErrorMsg("");
     setWarning(null);
+    setSelectErrorMsg("");
   }
 
   // Following 'courseBoxes' state value, render <CourseCard> corresponding box
@@ -342,7 +353,7 @@ function UserContextProvider({ children }) {
         assumedKnowledge[0].Alternative1 ||
         assumedKnowledge[0].Alternative2
       ) {
-        let message = `For ${dropId},Please make sure you have completed the following courses before enrolled`;
+        let message = `For ${dropId}, Please make sure you have completed the following courses before enrolled`;
         setWarning({ message, data: assumedKnowledge });
       }
 
@@ -361,11 +372,13 @@ function UserContextProvider({ children }) {
         userInfo,
         campusData,
         degreeData,
-        majorData,
+        major1Data,
+        major2Data,
         yearData,
         yearCount,
         courseBoxes,
         DragAvailablity,
+        selectErrorMsg,
         errorMsg,
         warning,
         totalCredit,

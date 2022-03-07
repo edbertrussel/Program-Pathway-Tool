@@ -3,7 +3,7 @@ import logo from "../../../logo.png"
 import "./UserMain.css";
 import SelectCourse from "../SelectCourse.js";
 import DropBox from "../DropBox.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,41 +42,46 @@ function UserMain() {
       <div className="UserMain">
         <header>
           <img src={logo} className="logo" alt="logo" />
+          {errorMsg && (
+            <div className="error-msg">
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                style={{ paddingRight: "5px" }}
+              ></FontAwesomeIcon>
+              {errorMsg}
+            </div>
+          )}
+          {warning && (
+            <div className="warning-msg">
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                style={{ paddingRight: "5px" }}
+              ></FontAwesomeIcon>
+              {warning.message}
+              <ul>
+                {warning.data.map((AK) => {
+                  return (
+                    <li>
+                      {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
+                        }`}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+          {
+            <div className="credit">
+              <div className="current-credit">Current Credit:</div>
+              <div className="num">
+                <div className="current-credit-num">{currentCredit}</div>
+                <div className="total-credit">/ {totalCredit} units</div>
+              </div>
+
+            </div>
+          }
         </header>
-        {
-          <div className="total-credit">
-            <h1></h1>
-            Current Credit: {currentCredit} / {totalCredit} units
-          </div>
-        }
-        {errorMsg && (
-          <div className="error-msg">
-            <FontAwesomeIcon
-              icon={faCircleXmark}
-              style={{ paddingRight: "5px" }}
-            ></FontAwesomeIcon>
-            {errorMsg}
-          </div>
-        )}
-        {warning && (
-          <div className="warning-msg">
-            <FontAwesomeIcon
-              icon={faCircleExclamation}
-              style={{ paddingRight: "5px" }}
-            ></FontAwesomeIcon>
-            {warning.message}
-            <ul>
-              {warning.data.map((AK) => {
-                return (
-                  <li>
-                    {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
-                      }`}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
+
         <div className="content">
           <div className="mainContent">
             <div className="droptable">

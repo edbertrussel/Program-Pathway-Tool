@@ -19,7 +19,7 @@ function ToolBar() {
     <div className="toolbar">
       <div className="search-bar">
         <input
-          placeholder="search"
+          placeholder="Search"
           type="text"
           size="50"
           ref={searchRef}
