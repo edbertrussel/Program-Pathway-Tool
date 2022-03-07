@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { text } from '@fortawesome/fontawesome-svg-core';
 import logo from "../../../logo.png";
 import "./AdminLogin.css";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 
 function AdminLogin() {
@@ -11,7 +12,9 @@ function AdminLogin() {
   const  [adminId, setAdminId] = useState('')
   const  [password, setPassword] = useState('')
   const  [loginStatus, setLoginStatus] = useState('')
-  state = { redirect: false }
+  const  [redirect, setRedirect] = useState(false)
+
+  let navigate = useNavigate();
 
 
   function validateForm() {
@@ -25,14 +28,21 @@ function AdminLogin() {
       adminId: adminId,
       password: password
     }).then( res => {
-       alert(res.data.status);
-
+       //alert(res.data.status);
+       setRedirect(true);
     }) 
     .catch( error => {
       // alert(error.response.data.error);
       setLoginStatus('ID or Password is incorrect!');
+      setRedirect(false);
     })
   }; 
+
+  useEffect(() => {
+    if (redirect){
+      return navigate("/admin/home")
+    }
+  }, [redirect]);
   
   return (
     <div className='container'>
