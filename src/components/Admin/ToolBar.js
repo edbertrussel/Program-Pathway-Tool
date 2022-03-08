@@ -25,7 +25,7 @@ function ToolBar() {
           ref={searchRef}
         ></input>
         <button
-          className="btn-blue"
+          className="btn-search"
           onClick={() => onSearch(searchRef.current.value)}
         >
           <FontAwesomeIcon icon={faMagnifyingGlass}></FontAwesomeIcon>
