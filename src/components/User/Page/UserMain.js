@@ -4,12 +4,13 @@ import "./UserMain.css";
 import SelectCourse from "../SelectCourse.js";
 import DropBox from "../DropBox.js";
 import React, { useEffect } from "react";
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
 
 function UserMain() {
   const {
@@ -17,6 +18,7 @@ function UserMain() {
     yearCount,
     courseBoxes,
     DragAvailablity,
+    isErrOrWarn,
     errorMsg,
     warning,
     totalCredit,
@@ -42,34 +44,38 @@ function UserMain() {
       <div className="UserMain">
         <header>
           <img src={logo} className="logo" alt="logo" />
-          {errorMsg && (
-            <div className="error-msg">
-              <FontAwesomeIcon
-                icon={faCircleXmark}
-                style={{ paddingRight: "5px" }}
-              ></FontAwesomeIcon>
-              {errorMsg}
+          <CSSTransition in={isErrOrWarn} timeout={1000} classNames="fade">
+            <div>
+              {errorMsg && (
+                <div className="error-msg">
+                  <FontAwesomeIcon
+                    icon={faCircleXmark}
+                    style={{ paddingRight: "5px" }}
+                  ></FontAwesomeIcon>
+                  {errorMsg}
+                </div>
+              )}
+              {warning && (
+                <div className="warning-msg">
+                  <FontAwesomeIcon
+                    icon={faCircleExclamation}
+                    style={{ paddingRight: "5px" }}
+                  ></FontAwesomeIcon>
+                  {warning.message}
+                  <ul>
+                    {warning.data.map((AK) => {
+                      return (
+                        <li>
+                          {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
+                            }`}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
             </div>
-          )}
-          {warning && (
-            <div className="warning-msg">
-              <FontAwesomeIcon
-                icon={faCircleExclamation}
-                style={{ paddingRight: "5px" }}
-              ></FontAwesomeIcon>
-              {warning.message}
-              <ul>
-                {warning.data.map((AK) => {
-                  return (
-                    <li>
-                      {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
-                        }`}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
+          </CSSTransition>
           {
             <div className="credit">
               <div className="current-credit">Current Credit:</div>
@@ -91,29 +97,34 @@ function UserMain() {
                 <div className="header__tri">Trimester 2</div>
                 <div className="header__tri">Trimester 3</div>
               </div>
-
-              {yearCount.map((i) => {
-                const year = new Date().getFullYear();
-                const yearAvailability = !DragAvailablity
-                  ? null
-                  : DragAvailablity.filter(
-                    (availability) => availability.year === startYear + i
-                  ).length !== 0 || startYear + i > year
-                    ? DragAvailablity.filter(
+              <TransitionGroup>
+                {yearCount.map((i) => {
+                  const year = new Date().getFullYear();
+                  const yearAvailability = !DragAvailablity
+                    ? null
+                    : DragAvailablity.filter(
                       (availability) => availability.year === startYear + i
-                    )
-                    : null;
+                    ).length !== 0 || startYear + i > year
+                      ? DragAvailablity.filter(
+                        (availability) => availability.year === startYear + i
+                      )
+                      : null;
 
-                return (
-                  <>
-                    <DropBox
-                      key={startYear + i}
-                      year={startYear + i}
-                      availability={yearAvailability}
-                    />
-                  </>
-                );
-              })}
+                  return (
+                    <CSSTransition
+                      key={i}
+                      timeout={500}
+                      classNames="fade"
+                    >
+                      <DropBox
+                        key={startYear + i}
+                        year={startYear + i}
+                        availability={yearAvailability}
+                      />
+                    </CSSTransition>
+                  )
+                })}
+              </TransitionGroup>
 
               <div className="handleYear">
                 <div className="blank"></div>

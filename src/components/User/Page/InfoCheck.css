@@ -47,9 +47,13 @@
 }
 
 .link__confirm {
-  margin: 20px 0 50px 0;
+  margin: 20px auto;
   width: 100px;
   height: 40px;
   background-color: var(--blue);
   color: white;
+}
+.link__confirm:hover {
+  background-color: white;
+  color: var(--blue);
 }

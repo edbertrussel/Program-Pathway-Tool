@@ -12,6 +12,10 @@ function UserContextProvider({ children }) {
     major2: '',
     startYear: '',
   });
+  const [isErrorMsgSelected, setIsErrorMsgSelected] = useState(false);
+  const [isCampusSelected, setIsCampusSelected] = useState(false);
+  const [isDegreeSelected, setIsDegreeSelected] = useState(false);
+  const [isMajor1Selected, setIsMajor1Selected] = useState(false);
   const [campusData, setCampusData] = useState([]);
   const [degreeData, setDegreeData] = useState([]);
   const [major1Data, setMajor1Data] = useState([]);
@@ -20,7 +24,7 @@ function UserContextProvider({ children }) {
   const [yearCount, setYearCount] = useState([0, 1]);
   const [courseBoxes, setCourseBoxes] = useState([]);
   const [DragAvailablity, setAvailability] = useState(null);
-  const [selectErrorMsg, setSelectErrorMsg] = useState("");
+  const [isErrOrWarn, setIsErrOrWarn] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [warning, setWarning] = useState(null);
   const [maxYear, setMaxYear] = useState(5);
@@ -59,6 +63,7 @@ function UserContextProvider({ children }) {
         "Degree"
       )
     );
+    setIsCampusSelected(true);
   };
   async function handleDegreeChange(e) {
     setUserInfo({ ...userInfo, degree: e.target.value });
@@ -68,14 +73,15 @@ function UserContextProvider({ children }) {
         "Major"
       )
     );
+    setIsDegreeSelected(true);
   };
   function handleMajor1Change(e) {
     setUserInfo({ ...userInfo, major1: e.target.value });
 
     //Option that is selected in major1 does not appear on major2 list
     setMajor2Data(major1Data.filter(arr => arr.MajorId.toString() !== e.target.value));
-
     setYearData(yearObj);
+    setIsMajor1Selected(true);
   };
   function handleMajor2Change(e) {
     setUserInfo({ ...userInfo, major2: e.target.value });
@@ -93,7 +99,7 @@ function UserContextProvider({ children }) {
       userInfo.startYear === ''
     ) {
       e.preventDefault();
-      setSelectErrorMsg("Please select all items!");
+      setIsErrorMsgSelected(true);
     }
   };
 
@@ -178,10 +184,13 @@ function UserContextProvider({ children }) {
   };
 
   function onYearAddClick(e) {
+    setErrorMsg("");
+
     // Check maximum year number (if you want 6 years maximum: > 6)
     if (yearCount.length + 1 > maxYear) {
       e.preventDefault();
       setErrorMsg(maxYear + " years Maximum!");
+      setIsErrOrWarn(true);
       return;
     }
 
@@ -189,10 +198,13 @@ function UserContextProvider({ children }) {
   };
 
   function onYearDeleteClick(e) {
+    setErrorMsg("");
+
     // Check minimum year number
     if (yearCount.length - 1 < 2) {
       e.preventDefault();
       setErrorMsg("2 years Minimum!");
+      setIsErrOrWarn(true);
       return;
     }
 
@@ -213,7 +225,8 @@ function UserContextProvider({ children }) {
     });
     setErrorMsg("");
     setWarning(null);
-    setSelectErrorMsg("");
+    setIsErrOrWarn(false);
+    setIsErrorMsgSelected(false);
   }
 
   // Following 'courseBoxes' state value, render <CourseCard> corresponding box
@@ -244,6 +257,7 @@ function UserContextProvider({ children }) {
   };
 
   const onDrop = (dropId, boxName) => {
+    setIsErrOrWarn(false);
     setWarning(null);
     setErrorMsg(null);
     setCourseBoxes((prevBoxes) => {
@@ -260,6 +274,7 @@ function UserContextProvider({ children }) {
       if (prevBoxes.filter((course) => course.box === boxName).length > 3) {
         //restrict to at most 4 courses in one semester
         setErrorMsg("You can only have at most 4 courses in one semester");
+        setIsErrOrWarn(true);
         return [...prevBoxes];
       }
       if (dropId.substr(-1) === "A") {
@@ -284,6 +299,7 @@ function UserContextProvider({ children }) {
           setErrorMsg(
             `${dropId} and ${courseId} must be completed in consecutive terms`
           );
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
       }
@@ -308,6 +324,7 @@ function UserContextProvider({ children }) {
           setErrorMsg(
             `${courseId} and ${dropId} must be completed in consecutive terms`
           );
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
       }
@@ -330,6 +347,7 @@ function UserContextProvider({ children }) {
         setErrorMsg(
           `${dropId} require you to complete ${requiredUnit} units before enrolled`
         );
+        setIsErrOrWarn(true);
 
         return [...prevBoxes];
       }
@@ -345,6 +363,7 @@ function UserContextProvider({ children }) {
         setErrorMsg(
           `${dropId} is not offered in ${dropYear} Tri ${dropSemester}`
         );
+        setIsErrOrWarn(true);
         return [...prevBoxes];
       }
       if (
@@ -355,6 +374,7 @@ function UserContextProvider({ children }) {
       ) {
         let message = `For ${dropId}, Please make sure you have completed the following courses before enrolled`;
         setWarning({ message, data: assumedKnowledge });
+        setIsErrOrWarn(true);
       }
 
       return prevBoxes.map((Box) => {
@@ -363,8 +383,6 @@ function UserContextProvider({ children }) {
     });
     onDragOver();
   };
-
-
 
   return (
     <UserContext.Provider
@@ -378,7 +396,11 @@ function UserContextProvider({ children }) {
         yearCount,
         courseBoxes,
         DragAvailablity,
-        selectErrorMsg,
+        isErrorMsgSelected,
+        isCampusSelected,
+        isDegreeSelected,
+        isMajor1Selected,
+        isErrOrWarn,
         errorMsg,
         warning,
         totalCredit,

@@ -152,13 +152,16 @@ button.btn__addYear {
   margin: var(--dropcontent-margin);
   width: calc(860px + var(--dropcontent-margin) * 4);
   height: 30px;
-  color: var(--dark-gray);
   font-weight: bolder;
+  color: var(--dark-gray);
   background-color: var(--placeholder-color);
 }
-
-button.btn__addYear:active {
+button.btn__addYear:hover {
+  color: var(--dark-gray);
   background-color: var(--bright-gray);
+}
+button.btn__addYear:active {
+  background-color: var(--gray);
 }
 
 /* Delete Year Button */
@@ -174,9 +177,11 @@ button.btn__deleteyear {
   height: 30px;
   width: 30px;
 }
-
-button.btn__deleteyear:active {
+button.btn__deleteyear:hover {
   background-color: var(--bright-gray);
+}
+button.btn__deleteyear:active {
+  background-color: var(--gray);
 }
 
 button.btn__deleteyear .iconTrashCan {
@@ -203,6 +208,10 @@ button.btn__deleteyear .iconTrashCan {
   background-color: var(--gray);
   color: white;
 }
+.buttons .link__back:hover {
+  background-color: white;
+  color: var(--gray);
+}
 
 /* Show My Path button */
 .buttons .btn__showpath {
@@ -211,6 +220,10 @@ button.btn__deleteyear .iconTrashCan {
   height: 35px;
   background-color: var(--blue);
   color: white;
+}
+.buttons .btn__showpath:hover {
+  background-color: white;
+  color: var(--blue);
 }
 
 /****************************/
@@ -340,6 +353,7 @@ button.btn__deleteyear .iconTrashCan {
   line-height: 40px;
   box-shadow: 0px 0px 4px 1px var(--gray);
 }
+
 .CourseCard-name {
   cursor: pointer;
   display: flex;
