@@ -2,15 +2,16 @@ import CourseCard from "../User/CourseCard";
 import React from "react";
 import { useContext, useState } from "react";
 import axios from "axios";
+import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom";
 
 const UserContext = React.createContext();
 function UserContextProvider({ children }) {
   const [userInfo, setUserInfo] = useState({
-    campus: '',
-    degree: '',
-    major1: '',
-    major2: '',
-    startYear: '',
+    campus: "",
+    degree: "",
+    major1: "",
+    major2: "",
+    startYear: "",
   });
   const [campusData, setCampusData] = useState([]);
   const [degreeData, setDegreeData] = useState([]);
@@ -26,8 +27,13 @@ function UserContextProvider({ children }) {
   const [maxYear, setMaxYear] = useState(5);
   const [totalCredit, setTotalCredit] = useState(0);
   const [currentCredit, setCurrentCredit] = useState(0);
+  const [totalMajor1Credit, setMajor1TotalCredit] = useState(0);
+  const [currentMajor1Credit, setCurrentMajor1Credit] = useState(0);
+  const [totalMajor2Credit, setMajor2TotalCredit] = useState(0);
+  const [currentMajor2Credit, setCurrentMajor2Credit] = useState(0);
   const [isHover, setIsHover] = useState(false);
-
+  const [isLoadingPath, setIsLoadingPath] = useState(false);
+  const [isPathCompleted, setIsPathCompleted] = useState(false);
   // -----For <InfoCheck> Pages-------------------------------------------------------
   async function getInfoData(url, type) {
     try {
@@ -59,7 +65,7 @@ function UserContextProvider({ children }) {
         "Degree"
       )
     );
-  };
+  }
   async function handleDegreeChange(e) {
     setUserInfo({ ...userInfo, degree: e.target.value });
     setMajor1Data(
@@ -68,34 +74,36 @@ function UserContextProvider({ children }) {
         "Major"
       )
     );
-  };
+  }
   function handleMajor1Change(e) {
     setUserInfo({ ...userInfo, major1: e.target.value });
 
     //Option that is selected in major1 does not appear on major2 list
-    setMajor2Data(major1Data.filter(arr => arr.MajorId.toString() !== e.target.value));
+    setMajor2Data(
+      major1Data.filter((arr) => arr.MajorId.toString() !== e.target.value)
+    );
 
     setYearData(yearObj);
-  };
+  }
   function handleMajor2Change(e) {
     setUserInfo({ ...userInfo, major2: e.target.value });
-  };
+  }
   function handleYearChange(e) {
     setUserInfo({ ...userInfo, startYear: e.target.value });
-  };
+  }
 
   // Check all required options are selected
   function onInfoConfirmClick(e) {
     if (
-      userInfo.campus === '' ||
-      userInfo.degree === '' ||
-      userInfo.major1 === '' ||
-      userInfo.startYear === ''
+      userInfo.campus === "" ||
+      userInfo.degree === "" ||
+      userInfo.major1 === "" ||
+      userInfo.startYear === ""
     ) {
       e.preventDefault();
       setSelectErrorMsg("Please select all items!");
     }
-  };
+  }
 
   // -----For <UserMain> Pages-------------------------------------------------------
   // Get course data according to the selected option
@@ -104,69 +112,66 @@ function UserContextProvider({ children }) {
       method: "GET",
       url: `http://localhost:5000/api/degree/${userInfo.degree}`,
     });
-
+    const major1Res = await axios({
+      method: "GET",
+      url: `http://localhost:5000/api/major/${userInfo.major1}`,
+    });
+    const major2Res = await axios({
+      method: "GET",
+      url: `http://localhost:5000/api/major/${userInfo.major2}`,
+    });
     const { Max_Year, Total_Credit } = degreeRes.data.result;
+    console.log(major1Res);
     setMaxYear(Max_Year);
     setTotalCredit(Total_Credit);
+    setMajor1TotalCredit(major1Res.data.result.Total_Unit);
+    setMajor2TotalCredit(major2Res.data.result.Total_Unit);
     let courseIDList = [];
     const degreeCourseRes = await axios({
       method: "GET",
       url: `http://localhost:5000/api/degree/${userInfo.degree}/course`,
     });
+
     const major1CourseRes = await axios({
       method: "GET",
       url: `http://localhost:5000/api/major/${userInfo.major1}/course`,
     });
     const major2CourseRes =
-      userInfo.major2 === ''
+      userInfo.major2 === ""
         ? null
         : await axios({
-          method: "GET",
-          url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
-        });
+            method: "GET",
+            url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
+          });
     const major2Courses = major2CourseRes
-      ? [
-        ...major2CourseRes.data.result.map((course) => ({
-          courseId: course.Course_ID,
-          courseName: course.Course_Name,
-          box: "box__major2",
-          type: "major2",
-          unit: course.Unit,
-          requiredUnit: course.Required_Unit,
-          assumedKnowledge: course.Assumed_Knowledge,
-          availability: course.Availability,
-        })),
-      ]
+      ? processCourseList(major2CourseRes.data.result, "major2")
       : [];
+
     courseIDList = [
       ...courseIDList,
-      ...degreeCourseRes.data.result.map((course) => ({
-        courseId: course.Course_ID,
-        courseName: course.Course_Name,
-        box: "box__core",
-        type: "core",
-        unit: course.Unit,
-        requiredUnit: course.Required_Unit,
-        assumedKnowledge: course.Assumed_Knowledge,
-        availability: course.Availability,
-      })),
-      ...major1CourseRes.data.result.map((course) => ({
-        courseId: course.Course_ID,
-        courseName: course.Course_Name,
-        box: "box__major1",
-        type: "major1",
-        unit: course.Unit,
-        requiredUnit: course.Required_Unit,
-        assumedKnowledge: course.Assumed_Knowledge,
-        availability: course.Availability,
-      })),
+      ...processCourseList(degreeCourseRes.data.result, "core"),
+      ...processCourseList(major1CourseRes.data.result, "major1"),
       ...major2Courses,
     ];
-    console.log(courseIDList);
-    setCourseBoxes(courseIDList);
-  };
 
-  // Calculate current credit amount 
+    setCourseBoxes(courseIDList);
+  }
+  function processCourseList(courseList, type) {
+    return courseList.map((course) => {
+      return {
+        courseId: course.Course_ID,
+        courseName: course.Course_Name,
+        isCompulsory: course.Type === "Core" || course.Type === "Compulsory",
+        box: "box__" + type,
+        type: type,
+        unit: course.Unit,
+        requiredUnit: course.Required_Unit,
+        assumedKnowledge: course.Assumed_Knowledge,
+        availability: course.Availability,
+      };
+    });
+  }
+  // Calculate current credit amount
   function calCredit() {
     setCurrentCredit(
       courseBoxes.reduce((prevVal, curVal) => {
@@ -175,7 +180,21 @@ function UserContextProvider({ children }) {
         else return prevVal;
       }, 0)
     );
-  };
+    setCurrentMajor1Credit(
+      courseBoxes.reduce((prevVal, curVal) => {
+        if (curVal.box.substr(0, 3) !== "box" && curVal.type === "major1")
+          return (prevVal = prevVal + curVal.unit);
+        else return prevVal;
+      }, 0)
+    );
+    setCurrentMajor2Credit(
+      courseBoxes.reduce((prevVal, curVal) => {
+        if (curVal.box.substr(0, 3) !== "box" && curVal.type === "major2")
+          return (prevVal = prevVal + curVal.unit);
+        else return prevVal;
+      }, 0)
+    );
+  }
 
   function onYearAddClick(e) {
     // Check maximum year number (if you want 6 years maximum: > 6)
@@ -186,7 +205,7 @@ function UserContextProvider({ children }) {
     }
 
     setYearCount(yearCount.concat([yearCount.length]));
-  };
+  }
 
   function onYearDeleteClick(e) {
     // Check minimum year number
@@ -196,20 +215,18 @@ function UserContextProvider({ children }) {
       return;
     }
 
-    const deletedList = yearCount.filter(
-      (idx) => idx < yearCount.length - 1
-    );
+    const deletedList = yearCount.filter((idx) => idx < yearCount.length - 1);
     setYearCount(deletedList);
-  };
+  }
 
   // When go back to <InfoCheck> page, reset user info, error message and warning
   function onBackClick() {
     setUserInfo({
-      campus: '',
-      degree: '',
-      major1: '',
-      major2: '',
-      startYear: '',
+      campus: "",
+      degree: "",
+      major1: "",
+      major2: "",
+      startYear: "",
     });
     setErrorMsg("");
     setWarning(null);
@@ -225,6 +242,7 @@ function UserContextProvider({ children }) {
           key={courseBoxes.courseId}
           courseId={courseBoxes.courseId}
           courseName={courseBoxes.courseName}
+          isCompulsory={courseBoxes.isCompulsory}
           setCourseBoxes={setCourseBoxes}
           getCourseBoxes={courseBoxes}
           onDrag={onDrag}
@@ -238,14 +256,15 @@ function UserContextProvider({ children }) {
     );
 
     setAvailability(availability);
-  };
+  }
   function onDragOver() {
     setAvailability(null);
-  };
+  }
 
-  const onDrop = (dropId, boxName) => {
+  function onDrop(dropId, boxName) {
     setWarning(null);
     setErrorMsg(null);
+
     setCourseBoxes((prevBoxes) => {
       const dropYear = parseInt(boxName.substr(0, 4)); //get the year from boxName eg 2018_tri1 -> 2018
       const dropSemester = parseInt(boxName.substr(-1)); //eg 2018_tri1 -> 1
@@ -321,10 +340,16 @@ function UserContextProvider({ children }) {
           return (prevVal = prevVal + curVal.unit);
         else return prevVal;
       }, 0);
-      console.log(totalUnit);
-      const { requiredUnit, assumedKnowledge, availability } = prevBoxes.find(
-        (box) => box.courseId === dropId
-      );
+
+      const {
+        box,
+        unit,
+        type,
+        isCompulsory,
+        requiredUnit,
+        assumedKnowledge,
+        availability,
+      } = prevBoxes.find((box) => box.courseId === dropId);
 
       if (totalUnit < requiredUnit) {
         setErrorMsg(
@@ -332,6 +357,39 @@ function UserContextProvider({ children }) {
         );
 
         return [...prevBoxes];
+      }
+      if (!isCompulsory) {
+        if (
+          type === "major1" &&
+          box.substr(0, 3) === "box" &&
+          currentMajor1Credit + unit + getUnit(prevBoxes, type, false, true) >
+            totalMajor1Credit
+        ) {
+          setErrorMsg(`You have reach maximum directed course for major 1`);
+          return [...prevBoxes];
+        }
+        if (
+          type === "major2" &&
+          box.substr(0, 3) === "box" &&
+          currentMajor2Credit + unit + getUnit(prevBoxes, type, false, true) >
+            totalMajor2Credit
+        ) {
+          setErrorMsg(`You have reach maximum directed course for major 2`);
+          return [...prevBoxes];
+        }
+
+        if (
+          type === "core" &&
+          box.substr(0, 3) === "box" &&
+          totalMajor1Credit +
+            totalMajor2Credit +
+            getCoreUnit(prevBoxes) +
+            unit >
+            totalCredit
+        ) {
+          setErrorMsg(`You have reach maximum elective course for your degree`);
+          return [...prevBoxes];
+        }
       }
       //We assume that the course is offered on every semester
       //if the year > current year AND there is no availability data found from database for the specific year
@@ -362,10 +420,269 @@ function UserContextProvider({ children }) {
       });
     });
     onDragOver();
-  };
+  }
+  function getUnit(courseList, type, isCompleted, isCompulsory) {
+    const totalUnit = courseList.reduce((prevVal, curVal) => {
+      if (
+        isCompleted
+          ? curVal.box.substr(0, 3) !== "box"
+          : curVal.box.substr(0, 3) === "box" &&
+            curVal.type === type &&
+            curVal.isCompulsory === isCompulsory
+      )
+        return (prevVal = prevVal + curVal.unit);
+      else return prevVal;
+    }, 0);
+    return totalUnit;
+  }
+  function getCoreUnit(courseList) {
+    return courseList.reduce((prevVal, curVal) => {
+      if (curVal.type === "core" && curVal.isCompulsory)
+        return (prevVal = prevVal + curVal.unit);
+      else return prevVal;
+    }, 0);
+  }
+  function generatePath() {
+    setIsLoadingPath(true);
+    let { year, semester } = getNextYearAndSem(courseBoxes);
+    if (!year && !semester) {
+      year = parseInt(userInfo.startYear);
+      semester = parseInt(1);
+    }
+    let courseList = courseBoxes;
+    let credit = currentCredit,
+      target = totalCredit;
+    let major1Credit = currentMajor1Credit,
+      targetMajor1Credit = totalMajor1Credit;
+    let major2Credit = currentMajor2Credit,
+      targetMajor2Credit = totalMajor2Credit;
 
+    courseList.forEach((course) => {
+      if (
+        course.courseId.substr(-1) === "A" &&
+        course.box.substr(0, 3) !== "box"
+      ) {
+        const partB = courseList.find(
+          (c) =>
+            c.courseId ===
+              `${course.courseId.substr(0, course.courseId.length - 1)}B` &&
+            c.box.substr(0, 3) === "box"
+        );
+        let nextSemester =
+          parseInt(course.box.substr(-1)) === 3
+            ? 1
+            : parseInt(course.box.substr(-1)) + 1;
+        let nextYear =
+          nextSemester === 1
+            ? parseInt(course.box.substr(0, 4)) + 1
+            : parseInt(course.box.substr(0, 4));
 
+        if (
+          partB &&
+          courseList.filter((c) => c.box === `${nextYear}__tri${nextSemester}`)
+            .length === 4
+        ) {
+          courseList = courseList.map((c) => {
+            if (c.courseId === course.courseId)
+              return { ...c, box: `box__${c.type}` };
+            return c;
+          });
+        } else if (partB) {
+          courseList = courseList.map((c) => {
+            if (
+              c.courseId ===
+              `${course.courseId.substr(0, course.courseId.length - 1)}B`
+            ) {
+              credit += c.unit;
+              return { ...c, box: `${nextYear}__tri${nextSemester}` };
+            }
 
+            return c;
+          });
+        }
+      }
+    });
+
+    while (credit < target) {
+      let numOfCourse = courseList.filter(
+        (c) =>
+          parseInt(c.box.substr(0, 4)) === year &&
+          parseInt(c.box.substr(-1)) === semester
+      ).length;
+
+      courseList = courseList.map((course) => {
+        const {
+          courseId,
+          box,
+          availability,
+          requiredUnit,
+          unit,
+          assumedKnowledge,
+        } = course;
+
+        if (
+          box.substr(0, 3) === "box" &&
+          (availability.findIndex(
+            (ava) => ava.year === year && ava.semester === semester
+          ) > -1 ||
+            year > new Date().getFullYear()) &&
+          requiredUnit <= credit &&
+          numOfCourse < 4 &&
+          checkAssumedKnowledge(courseList, year, semester, assumedKnowledge)
+        ) {
+          if (credit + unit > target) return course;
+          if (courseId.substr(-1) === "A") {
+            const partBIndex = courseList.findIndex(
+              (c) =>
+                c.courseId === `${courseId.substr(0, courseId.length - 1)}B`
+            );
+            courseList[partBIndex].box = `${
+              semester === 3 ? year + 1 : year
+            }__tri${semester === 3 ? 1 : semester + 1}`;
+
+            credit = credit + unit + courseList[partBIndex].unit;
+
+            numOfCourse++;
+
+            return {
+              ...course,
+              box: `${year}__tri${semester}`,
+            };
+          } else if (
+            course.type === "major1" &&
+            major1Credit < targetMajor1Credit &&
+            (course.isCompulsory ||
+              major1Credit +
+                course.unit +
+                getUnit(courseList, "major1", false, true) <=
+                targetMajor1Credit)
+          ) {
+            major1Credit += unit;
+            numOfCourse++;
+            credit += unit;
+            return {
+              ...course,
+              box: `${year}__tri${semester}`,
+            };
+          } else if (
+            course.type === "major2" &&
+            major2Credit < targetMajor2Credit &&
+            (course.isCompulsory ||
+              major2Credit +
+                course.unit +
+                getUnit(courseList, "major2", false, true) <=
+                targetMajor2Credit)
+          ) {
+            major2Credit += unit;
+            numOfCourse++;
+            credit += unit;
+            return {
+              ...course,
+              box: `${year}__tri${semester}`,
+            };
+          } else if (
+            course.type === "core" &&
+            (course.isCompulsory ||
+              targetMajor1Credit +
+                targetMajor2Credit +
+                getCoreUnit(courseList) +
+                unit <
+                target)
+          ) {
+            numOfCourse++;
+            credit += unit;
+            return {
+              ...course,
+              box: `${year}__tri${semester}`,
+            };
+          }
+        }
+
+        return course;
+      });
+      year = semester === 3 ? year + 1 : year;
+      semester = semester === 3 ? 1 : semester + 1;
+    }
+
+    setTimeout(() => {
+      setErrorMsg(null);
+      setWarning(null);
+      setIsLoadingPath(false);
+
+      setYearCount([
+        ...Array(
+          semester === 1
+            ? year - userInfo.startYear
+            : year - userInfo.startYear + 1
+        ).keys(),
+      ]);
+      setCourseBoxes(courseList);
+    }, 1000);
+  }
+  function checkAssumedKnowledge(courses, year, sem, assumedKnowledge) {
+    if (
+      assumedKnowledge.length === 1 &&
+      !assumedKnowledge[0].Alternative1 &&
+      !assumedKnowledge[0].Alternative2
+    ) {
+      return true;
+    }
+    const passedList = courses.filter((c) => {
+      const isDragged = c.box.substr(0, 3) !== "box";
+      const courseYear = parseInt(c.box.substr(0, 4));
+      const courseSem = parseInt(c.box.substr(-1));
+      return (
+        isDragged &&
+        (courseYear < year || (courseYear === year && courseSem < sem))
+      );
+    });
+    let isFound = false;
+    for (var i = 0; i < assumedKnowledge.length; i++) {
+      const { Alternative1, Alternative2 } = assumedKnowledge[i];
+      let x;
+      for (x = 0; x < passedList.length; x++) {
+        if (
+          Alternative1 === passedList[x].courseId ||
+          Alternative2 === passedList[x].courseId
+        )
+          break;
+      }
+      if (x === passedList.length) return false;
+    }
+    return true;
+  }
+  function getNextYearAndSem(courses) {
+    const draggedCourses = courses.filter(
+      (course) => course.box.substr(0, 3) !== "box"
+    );
+    let year = 0,
+      semester = 0;
+    draggedCourses.forEach((course) => {
+      const boxYear = parseInt(course.box.substr(0, 4));
+      const boxSem = parseInt(course.box.substr(-1));
+      if (boxYear > year) {
+        year = boxYear;
+        semester = boxSem;
+      } else if (boxYear === year && boxSem > semester) semester = boxSem;
+    });
+    if (year > 0 && semester > 0) {
+      return {
+        year: semester === 3 ? year + 1 : year,
+        semester: semester === 3 ? 1 : semester + 1,
+      };
+    }
+    return {};
+  }
+  function handleClearPath() {
+    setCourseBoxes((prevBoxes) => {
+      return prevBoxes.map((course) => {
+        return {
+          ...course,
+          box: `box__${course.type}`,
+        };
+      });
+    });
+  }
   return (
     <UserContext.Provider
       value={{
@@ -383,7 +700,16 @@ function UserContextProvider({ children }) {
         warning,
         totalCredit,
         currentCredit,
+        totalMajor1Credit,
+        totalMajor2Credit,
+        currentMajor1Credit,
+        currentMajor2Credit,
         isHover,
+        isLoadingPath,
+        isPathCompleted,
+        setIsPathCompleted,
+        handleClearPath,
+        setIsLoadingPath,
         setIsHover,
         getCampusData,
         handleCampusChange,
@@ -400,11 +726,12 @@ function UserContextProvider({ children }) {
         setBoxForCourse,
         onDrag,
         onDrop,
+        generatePath,
       }}
     >
       {children}
     </UserContext.Provider>
-  )
+  );
 }
 
 const useUserContext = () => useContext(UserContext);

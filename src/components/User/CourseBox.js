@@ -3,9 +3,12 @@ import { useDrop } from "react-dnd";
 
 function CourseBox({ type }) {
   const { onDrop, setBoxForCourse } = useUserContext();
-  const [, drop] = useDrop(() => ({
+  const [{ isOver }, drop] = useDrop(() => ({
     accept: "course",
     drop: (item) => onDrop(item.id, `box__${type}`),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
   }));
 
   return (
