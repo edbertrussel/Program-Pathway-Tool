@@ -456,12 +456,14 @@ function UserContextProvider({ children }) {
       targetMajor1Credit = totalMajor1Credit;
     let major2Credit = currentMajor2Credit,
       targetMajor2Credit = totalMajor2Credit;
-
+    //handle all multi-sequence course that have part A and part B which need to complete in consecutive term
     courseList.forEach((course) => {
       if (
         course.courseId.substr(-1) === "A" &&
         course.box.substr(0, 3) !== "box"
       ) {
+        //if there is any part A course which have been dragged to the dropbox,
+        //check if part B course is also dragged
         const partB = courseList.find(
           (c) =>
             c.courseId ===
@@ -476,18 +478,22 @@ function UserContextProvider({ children }) {
           nextSemester === 1
             ? parseInt(course.box.substr(0, 4)) + 1
             : parseInt(course.box.substr(0, 4));
-
+        //check if part B course is still not dragged and the next semester is full
         if (
           partB &&
           courseList.filter((c) => c.box === `${nextYear}__tri${nextSemester}`)
             .length === 4
         ) {
+          //if the next semester is full
+          //send the part A course back to the box__core
           courseList = courseList.map((c) => {
             if (c.courseId === course.courseId)
               return { ...c, box: `box__${c.type}` };
             return c;
           });
         } else if (partB) {
+          //if nextsemester is not full,
+          //put the part B course into it
           courseList = courseList.map((c) => {
             if (
               c.courseId ===
@@ -502,8 +508,9 @@ function UserContextProvider({ children }) {
         }
       }
     });
-
+    //started to fill the courses from where the user left
     while (credit < target) {
+      //get the num of course for the next semester
       let numOfCourse = courseList.filter(
         (c) =>
           parseInt(c.box.substr(0, 4)) === year &&
@@ -520,6 +527,10 @@ function UserContextProvider({ children }) {
           assumedKnowledge,
         } = course;
 
+        //check if the course is not dragged
+        //check if the course is available to fill in the current semester(from where the user left)
+        //check if the box already have 4 courses(full)
+        //check if the assumedknowledge for the course already completed
         if (
           box.substr(0, 3) === "box" &&
           (availability.findIndex(
@@ -530,7 +541,9 @@ function UserContextProvider({ children }) {
           numOfCourse < 4 &&
           checkAssumedKnowledge(courseList, year, semester, assumedKnowledge)
         ) {
+          //if the course will cause the credit to be exceeded, dont put it in
           if (credit + unit > target) return course;
+          //if it is part A course, put the part B course into next semester as well
           if (courseId.substr(-1) === "A") {
             const partBIndex = courseList.findIndex(
               (c) =>
@@ -548,6 +561,9 @@ function UserContextProvider({ children }) {
               ...course,
               box: `${year}__tri${semester}`,
             };
+            //check if it is major 1 course
+            //check if the major 1 credit exceeded
+            //check if the directed course exceeded
           } else if (
             course.type === "major1" &&
             major1Credit < targetMajor1Credit &&
@@ -565,6 +581,7 @@ function UserContextProvider({ children }) {
               box: `${year}__tri${semester}`,
             };
           } else if (
+            //same as the validation for major 1
             course.type === "major2" &&
             major2Credit < targetMajor2Credit &&
             (course.isCompulsory ||
@@ -600,11 +617,12 @@ function UserContextProvider({ children }) {
 
         return course;
       });
-      year = semester === 3 ? year + 1 : year;
+      year = semester === 3 ? year + 1 : year; //proceed to next semester
       semester = semester === 3 ? 1 : semester + 1;
     }
 
     setTimeout(() => {
+      //create a loading with 1 second
       setErrorMsg(null);
       setWarning(null);
       setIsLoadingPath(false);
@@ -620,6 +638,8 @@ function UserContextProvider({ children }) {
     }, 1000);
   }
   function checkAssumedKnowledge(courses, year, sem, assumedKnowledge) {
+    //this function is to check if the assumed knowledge have been cleared
+
     if (
       assumedKnowledge.length === 1 &&
       !assumedKnowledge[0].Alternative1 &&
@@ -628,6 +648,7 @@ function UserContextProvider({ children }) {
       return true;
     }
     const passedList = courses.filter((c) => {
+      //courses that have been completed
       const isDragged = c.box.substr(0, 3) !== "box";
       const courseYear = parseInt(c.box.substr(0, 4));
       const courseSem = parseInt(c.box.substr(-1));
@@ -647,11 +668,13 @@ function UserContextProvider({ children }) {
         )
           break;
       }
+      //if the assumedknowledge was cleared,x will be less that the length since it will be break earlier
       if (x === passedList.length) return false;
     }
     return true;
   }
   function getNextYearAndSem(courses) {
+    //get the year and semester where the user have dragged until
     const draggedCourses = courses.filter(
       (course) => course.box.substr(0, 3) !== "box"
     );
