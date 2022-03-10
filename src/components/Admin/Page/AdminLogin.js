@@ -4,6 +4,7 @@ import { text } from '@fortawesome/fontawesome-svg-core';
 import logo from "../../../logo.png";
 import "./AdminLogin.css";
 import { useNavigate } from "react-router-dom";
+import HttpRequest from '../../../HttpRequest';
 
 
 
@@ -24,7 +25,7 @@ function AdminLogin() {
   const Login = (e) => {
     e.preventDefault();
 
-    axios.post("http://localhost:5000/api/admin/login", {
+    HttpRequest.post("http://localhost:5000/api/admin/login", {
       adminId: adminId,
       password: password
     }).then( res => {

@@ -4,6 +4,7 @@ import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import HttpRequest from "../../HttpRequest";
 
 
 
@@ -15,7 +16,7 @@ function TopBar() {
   const Logout = (e) => {
     e.preventDefault();
 
-    axios.post("http://localhost:5000/api/admin/logout")
+    HttpRequest.post("http://localhost:5000/api/admin/logout")
     .then( res => {
        //alert(res.data.status);
        setRedirect(true);
