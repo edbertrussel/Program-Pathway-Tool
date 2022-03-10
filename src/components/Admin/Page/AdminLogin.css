@@ -48,18 +48,16 @@
   height: 40px;
   width: 362px;
   font-size: 18px;
-  color: white;
   outline: none;
   font-weight: bold;
-  background: var(--blue);
+  color: white;
+  background-color: var(--blue);
   border-radius: 3px;
 }
-
-/* .login_form button:hover {
-  width: 361px;
-  height: 46px;
-  font-size: 19px;
-} */
+.login_form button:hover {
+  color: var(--blue);
+  background-color: white;
+}
 
 .login_form .errormsg {
   display: flex;

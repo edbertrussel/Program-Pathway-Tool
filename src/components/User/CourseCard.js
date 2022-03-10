@@ -1,9 +1,10 @@
 import { useUserContext } from "../Context/UserContext.js";
-import React from "react";
+import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 
 function CourseCard({ courseId, courseName }) {
-  const { onDrag, isHover, setIsHover } = useUserContext();
+  const { onDrag } = useUserContext();
+  const [isHover, setIsHover] = useState(false);
   const [{ isDragging }, drag] = useDrag({
     type: "course",
     item: {

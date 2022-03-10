@@ -30,7 +30,6 @@ function UserContextProvider({ children }) {
   const [maxYear, setMaxYear] = useState(5);
   const [totalCredit, setTotalCredit] = useState(0);
   const [currentCredit, setCurrentCredit] = useState(0);
-  const [isHover, setIsHover] = useState(false);
 
   // -----For <InfoCheck> Pages-------------------------------------------------------
   async function getInfoData(url, type) {
@@ -405,8 +404,6 @@ function UserContextProvider({ children }) {
         warning,
         totalCredit,
         currentCredit,
-        isHover,
-        setIsHover,
         getCampusData,
         handleCampusChange,
         handleDegreeChange,
