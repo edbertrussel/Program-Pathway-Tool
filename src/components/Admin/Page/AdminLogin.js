@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import logo from "../../../logo.png";
+import "./AdminLogin.css";
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 import { text } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
-import logo from "../../../logo.png";
-import "./AdminLogin.css";
-import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -15,6 +17,7 @@ function AdminLogin() {
   const [password, setPassword] = useState('')
   const [loginStatus, setLoginStatus] = useState('')
   const [redirect, setRedirect] = useState(false)
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
 
   let navigate = useNavigate();
 
@@ -36,6 +39,7 @@ function AdminLogin() {
       .catch(error => {
         // alert(error.response.data.error);
         setLoginStatus('ID or Password is incorrect!');
+        setIsLoginFailed(true);
         setRedirect(false);
       })
   };
@@ -60,18 +64,22 @@ function AdminLogin() {
           <input type='password' onChange={(e) => { setPassword(e.target.value) }} />
 
           <button type='submit' disabled={!validateForm()} onClick={Login}> Login </button>
-          {
-            loginStatus && (
-              <>
-                <div className='errormsg'>
-                  <FontAwesomeIcon
-                    icon={faCircleXmark}
-                    style={{ paddingRight: "5px" }}
-                  ></FontAwesomeIcon>
-                  {loginStatus}
-                </div>
-              </>
-            )}
+          <CSSTransition in={isLoginFailed} timeout={1000} classNames="fade">
+            <div>
+              {
+                isLoginFailed && (
+                  <>
+                    <div className='errormsg'>
+                      <FontAwesomeIcon
+                        icon={faCircleXmark}
+                        style={{ paddingRight: "5px" }}
+                      ></FontAwesomeIcon>
+                      {loginStatus}
+                    </div>
+                  </>
+                )}
+            </div>
+          </CSSTransition>
         </form>
       </div>
     </div>
