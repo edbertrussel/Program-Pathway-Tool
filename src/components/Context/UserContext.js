@@ -668,7 +668,7 @@ function UserContextProvider({ children }) {
         )
           break;
       }
-      //if the assumedknowledge was cleared,x will be less that the length since it will be break earlier
+      //if the assumedknowledge was cleared, x will be less that the length since it will be break earlier
       if (x === passedList.length) return false;
     }
     return true;
