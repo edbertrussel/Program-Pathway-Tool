@@ -1,5 +1,5 @@
 import { useUserContext } from "../../Context/UserContext.js";
-import logo from "../../../logo.png"
+import logo from "../../../logo.png";
 import "./UserMain.css";
 import SelectCourse from "../SelectCourse.js";
 import DropBox from "../DropBox.js";
@@ -27,7 +27,16 @@ function UserMain() {
     calCredit,
     onYearAddClick,
     onYearDeleteClick,
-    onBackClick
+    onBackClick,
+    generatePath,
+    totalMajor1Credit,
+    totalMajor2Credit,
+    currentMajor1Credit,
+    currentMajor2Credit,
+    isLoadingPath,
+    handleClearPath,
+    isPathCompleted,
+    setIsPathCompleted,
   } = useUserContext();
   const startYear = parseInt(userInfo.startYear);
 
@@ -38,9 +47,26 @@ function UserMain() {
   useEffect(() => {
     calCredit();
   }, [courseBoxes]);
-
+  useEffect(() => {
+    if (
+      totalCredit > 0 &&
+      currentCredit === totalCredit &&
+      currentMajor1Credit === totalMajor1Credit &&
+      currentMajor2Credit === totalMajor2Credit
+    ) {
+      setIsPathCompleted(true);
+    } else setIsPathCompleted(false);
+  }, [currentCredit, currentMajor1Credit, currentMajor2Credit]);
   return (
     <DndProvider backend={HTML5Backend}>
+      {isLoadingPath && (
+        <div className="black-background">
+          <div
+            className="loader"
+            style={{ position: "relative", top: "50%" }}
+          ></div>
+        </div>
+      )}
       <div className="UserMain">
         <header>
           <img src={logo} className="logo" alt="logo" />
@@ -76,6 +102,7 @@ function UserMain() {
               )}
             </div>
           </CSSTransition>
+
           {
             <div className="credit">
               <div className="current-credit">Current Credit:</div>
@@ -83,11 +110,67 @@ function UserMain() {
                 <div className="current-credit-num">{currentCredit}</div>
                 <div className="total-credit">/ {totalCredit} units</div>
               </div>
-
             </div>
           }
+          {
+            <div className="credit">
+              <div className="current-credit">Major 1 Credit:</div>
+              <div className="num">
+                <div className="current-credit-num">{currentMajor1Credit}</div>
+                <div className="total-credit">/ {totalMajor1Credit} units</div>
+              </div>
+            </div>
+          }
+          {
+            <div className="credit">
+              <div className="current-credit">Major 2 Credit:</div>
+              <div className="num">
+                <div className="current-credit-num">{currentMajor2Credit}</div>
+                <div className="total-credit">/ {totalMajor2Credit} units</div>
+              </div>
+            </div>
+          }
+          <div className="color-legend">
+            <div className="color-legend-item">
+              <div className="color-box-compulsory"></div>
+              <div> - Core/Compulsory</div>
+            </div>
+            <div className="color-legend-item">
+              <div className="color-box-electives"></div>
+              <div> - Electives/Directed</div>
+            </div>
+          </div>
         </header>
-
+        <div className="error-msg">
+          {errorMsg && (
+            <>
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                style={{ paddingRight: "5px" }}
+              ></FontAwesomeIcon>
+              {errorMsg}
+            </>
+          )}
+        </div>
+        {warning && (
+          <div className="warning-msg">
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              style={{ paddingRight: "5px" }}
+            ></FontAwesomeIcon>
+            {warning.message}
+            <ul>
+              {warning.data.map((AK) => {
+                return (
+                  <li>
+                    {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
+                      }`}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
         <div className="content">
           <div className="mainContent">
             <div className="droptable">
@@ -128,7 +211,10 @@ function UserMain() {
 
               <div className="handleYear">
                 <div className="blank"></div>
-                <button className="btn__addYear" onClick={(e) => onYearAddClick(e)}>
+                <button
+                  className="btn__addYear"
+                  onClick={(e) => onYearAddClick(e)}
+                >
                   ADD YEAR
                 </button>
                 <div className="deleteYear">
@@ -147,6 +233,7 @@ function UserMain() {
 
               <div className="buttons">
                 <div className="blank"></div>
+
                 <Link
                   key="link__back"
                   className="link__back"
@@ -155,7 +242,16 @@ function UserMain() {
                 >
                   Back
                 </Link>
-                <button className="btn__showpath">Show My Path</button>
+                <button className="btn-clear" onClick={handleClearPath}>
+                  Clear
+                </button>
+
+                <button className="btn__showpath" onClick={generatePath}>
+                  Show My Path
+                </button>
+                {isPathCompleted && (
+                  <button className="btn-save">Save As</button>
+                )}
               </div>
             </div>
 

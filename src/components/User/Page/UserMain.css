@@ -31,6 +31,8 @@
 
 /* error message */
 .error-msg {
+  padding: 10px 0;
+  margin: auto;
   font-weight: bolder;
   font-size: 15px;
   color: var(--red);
@@ -39,6 +41,7 @@
   font-weight: bolder;
   font-size: 15px;
   color: var(--yellow);
+  margin: auto;
 }
 
 .warning-msg ul {
@@ -196,7 +199,7 @@ button.btn__deleteyear .iconTrashCan {
 }
 
 .buttons .blank {
-  width: 750px;
+  width: 600px;
 }
 
 /* Back button */
@@ -226,6 +229,19 @@ button.btn__deleteyear .iconTrashCan {
   color: var(--blue);
 }
 
+/* Clear Course button */
+.buttons .btn-clear {
+  margin: var(--dropcontent-margin);
+  width: 100px;
+  height: 35px;
+}
+.buttons .btn-save {
+  background-color: var(--dark-red);
+  margin: var(--dropcontent-margin);
+  width: 100px;
+  height: 35px;
+  color: white;
+}
 /****************************/
 /* <SelectCourse> component */
 .SelectCourse {
@@ -372,4 +388,25 @@ button.btn__deleteyear .iconTrashCan {
   overflow: hidden;
   font-size: 11px;
   box-shadow: 0px 0px 4px 1px var(--gray);
+}
+.course-compulsory {
+  background-color: var(--red) !important;
+}
+
+.color-box-compulsory {
+  width: 15px;
+  height: 15px;
+  background-color: var(--red);
+}
+.color-box-electives {
+  width: 15px;
+  height: 15px;
+  background-color: var(--blue);
+}
+.color-legend-item {
+  display: flex;
+  align-items: center;
+  font-weight: bolder;
+}
+.color-legend {
 }
