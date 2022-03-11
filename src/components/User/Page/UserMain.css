@@ -132,7 +132,11 @@
 
 /* Drop Table */
 .droptable {
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-area {
   display: flex;
   flex-direction: column;
 }
@@ -283,14 +287,14 @@ button.btn__deleteyear .iconTrashCan {
   color: var(--blue);
 }
 
-.buttons .btn-save {
+.buttons .btn-export {
   margin: var(--dropcontent-margin);
   width: 100px;
   height: 35px;
   color: white;
   background-color: var(--red);
 }
-.buttons .btn-save:hover {
+.buttons .btn-export:hover {
   color: var(--red);
   background-color: white;
 }
@@ -391,6 +395,62 @@ button.btn__deleteyear .iconTrashCan {
   font-weight: bold;
   box-shadow: 0px 0px 4px 1px var(--gray);
 }
+
 .course-compulsory {
+  background-color: var(--blue);
+}
+
+/* Save As Message Box */
+.exportas-msgbox {
+  padding: 10px;
+  margin: auto;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 400px;
+  height: 150px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px 1px var(--gray);
+}
+
+.exportas-msgbox .btn-cancel {
+  position: absolute;
+  top: 4%;
+  right: 2%;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  color: white;
+  background-color: var(--dark-gray);
+}
+.exportas-msgbox .btn-cancel:hover {
+  background-color: var(--gray);
+}
+
+.exportas-msgbox h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: bolder;
+}
+
+.export-btn-group {
+  margin: 30px 0 10px;
+}
+.export-btn-group > button {
+  margin: 10px;
+  width: 80px;
+  height: 40px;
+  color: white;
+  background-color: var(--gray);
+}
+.export-btn-group > button:hover {
+  color: white;
   background-color: var(--blue);
 }
