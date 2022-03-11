@@ -1,9 +1,9 @@
 import "./AdminHome.css";
 import HomeComponent from "../HomeComponent";
 import TopBar from "../TopBar";
-import { useEffect } from "react/cjs/react.production.min";
+import { useEffect } from "react";
+
 function AdminHome() {
-  
   return (
     <>
       <TopBar />

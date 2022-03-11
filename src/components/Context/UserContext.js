@@ -7,11 +7,11 @@ import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom";
 const UserContext = React.createContext();
 function UserContextProvider({ children }) {
   const [userInfo, setUserInfo] = useState({
-    campus: "",
-    degree: "",
-    major1: "",
-    major2: "",
-    startYear: "",
+    campus: "SG001",
+    degree: "11497",
+    major1: "1",
+    major2: "2",
+    startYear: "2020",
   });
   const [campusData, setCampusData] = useState([]);
   const [degreeData, setDegreeData] = useState([]);
@@ -423,12 +423,13 @@ function UserContextProvider({ children }) {
   }
   function getUnit(courseList, type, isCompleted, isCompulsory) {
     const totalUnit = courseList.reduce((prevVal, curVal) => {
+      const checkIdCompleted = isCompleted
+        ? curVal.box.substr(0, 3) !== "box"
+        : curVal.box.substr(0, 3) === "box";
       if (
-        isCompleted
-          ? curVal.box.substr(0, 3) !== "box"
-          : curVal.box.substr(0, 3) === "box" &&
-            curVal.type === type &&
-            curVal.isCompulsory === isCompulsory
+        checkIdCompleted &&
+        curVal.type === type &&
+        curVal.isCompulsory === isCompulsory
       )
         return (prevVal = prevVal + curVal.unit);
       else return prevVal;
@@ -457,6 +458,12 @@ function UserContextProvider({ children }) {
     let major2Credit = currentMajor2Credit,
       targetMajor2Credit = totalMajor2Credit;
     //handle all multi-sequence course that have part A and part B which need to complete in consecutive term
+    const assumedKnowledgeList = courseList.reduce((prev, cur) => {
+      return prev.concat(cur.assumedKnowledge);
+    }, []);
+    courseList.sort((first, second) => {
+      return second.isCompulsory - first.isCompulsory;
+    });
     courseList.forEach((course) => {
       if (
         course.courseId.substr(-1) === "A" &&
@@ -484,6 +491,7 @@ function UserContextProvider({ children }) {
           courseList.filter((c) => c.box === `${nextYear}__tri${nextSemester}`)
             .length === 4
         ) {
+          console.log("partB back to list");
           //if the next semester is full
           //send the part A course back to the box__core
           courseList = courseList.map((c) => {
@@ -492,6 +500,7 @@ function UserContextProvider({ children }) {
             return c;
           });
         } else if (partB) {
+          console.log("part B to next sem");
           //if nextsemester is not full,
           //put the part B course into it
           courseList = courseList.map((c) => {
@@ -516,7 +525,40 @@ function UserContextProvider({ children }) {
           parseInt(c.box.substr(0, 4)) === year &&
           parseInt(c.box.substr(-1)) === semester
       ).length;
-
+      courseList = courseList.map((course) => {
+        const {
+          courseId,
+          box,
+          availability,
+          requiredUnit,
+          unit,
+          assumedKnowledge,
+        } = course;
+        const isAssumedKnowledge =
+          assumedKnowledgeList.findIndex(
+            (ak) => ak.Alternative1 === courseId || ak.Alternative2 === courseId
+          ) > -1;
+        if (
+          box.substr(0, 3) === "box" &&
+          (availability.findIndex(
+            (ava) => ava.year === year && ava.semester === semester
+          ) > -1 ||
+            year > new Date().getFullYear()) &&
+          requiredUnit <= credit &&
+          numOfCourse < 4 &&
+          isAssumedKnowledge &&
+          courseId.substr(-1) !== "A"
+        ) {
+          numOfCourse++;
+          credit += unit;
+          major1Credit =
+            course.type === "major1" ? major1Credit + unit : major1Credit;
+          major2Credit =
+            course.type === "major2" ? major2Credit + unit : major2Credit;
+          return { ...course, box: `${year}__tri${semester}` };
+        }
+        return course;
+      });
       courseList = courseList.map((course) => {
         const {
           courseId,
@@ -552,9 +594,9 @@ function UserContextProvider({ children }) {
             courseList[partBIndex].box = `${
               semester === 3 ? year + 1 : year
             }__tri${semester === 3 ? 1 : semester + 1}`;
-
+            console.log(credit);
             credit = credit + unit + courseList[partBIndex].unit;
-
+            console.log(credit);
             numOfCourse++;
 
             return {
@@ -620,7 +662,8 @@ function UserContextProvider({ children }) {
       year = semester === 3 ? year + 1 : year; //proceed to next semester
       semester = semester === 3 ? 1 : semester + 1;
     }
-
+    const { year: finalYear, semester: finalSem } =
+      getNextYearAndSem(courseList);
     setTimeout(() => {
       //create a loading with 1 second
       setErrorMsg(null);
@@ -629,9 +672,9 @@ function UserContextProvider({ children }) {
 
       setYearCount([
         ...Array(
-          semester === 1
-            ? year - userInfo.startYear
-            : year - userInfo.startYear + 1
+          finalSem === 1
+            ? finalYear - userInfo.startYear
+            : finalYear - userInfo.startYear + 1
         ).keys(),
       ]);
       setCourseBoxes(courseList);
