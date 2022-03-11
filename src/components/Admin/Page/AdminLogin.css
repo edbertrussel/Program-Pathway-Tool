@@ -6,10 +6,11 @@
 
 .container {
   position: relative;
-  margin-top: 100px;
+  margin-top: 200px;
   width: 440px;
   height: auto;
   border-radius: 5px;
+  box-shadow: 0px 0px 4px 1px var(--bright-gray);
 }
 
 .container .logo {

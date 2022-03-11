@@ -47,6 +47,7 @@ function UserMain() {
   useEffect(() => {
     calCredit();
   }, [courseBoxes]);
+
   useEffect(() => {
     if (
       totalCredit > 0 &&
@@ -57,8 +58,10 @@ function UserMain() {
       setIsPathCompleted(true);
     } else setIsPathCompleted(false);
   }, [currentCredit, currentMajor1Credit, currentMajor2Credit]);
+
   return (
     <DndProvider backend={HTML5Backend}>
+
       {isLoadingPath && (
         <div className="black-background">
           <div
@@ -67,42 +70,17 @@ function UserMain() {
           ></div>
         </div>
       )}
+
       <div className="UserMain">
         <header>
-          <img src={logo} className="logo" alt="logo" />
-          <CSSTransition in={isErrOrWarn} timeout={1000} classNames="fade">
-            <div>
-              {errorMsg && (
-                <div className="error-msg">
-                  <FontAwesomeIcon
-                    icon={faCircleXmark}
-                    style={{ paddingRight: "5px" }}
-                  ></FontAwesomeIcon>
-                  {errorMsg}
-                </div>
-              )}
-              {warning && (
-                <div className="warning-msg">
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    style={{ paddingRight: "5px" }}
-                  ></FontAwesomeIcon>
-                  {warning.message}
-                  <ul>
-                    {warning.data.map((AK) => {
-                      return (
-                        <li>
-                          {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
-                            }`}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </CSSTransition>
-
+          <Link
+            key="link__home"
+            className="link__home"
+            to="/"
+            onClick={() => onBackClick()}
+          >
+            <img src={logo} className="logo" alt="logo" />
+          </Link>
           {
             <div className="credit">
               <div className="current-credit">Current Credit:</div>
@@ -133,44 +111,48 @@ function UserMain() {
           <div className="color-legend">
             <div className="color-legend-item">
               <div className="color-box-compulsory"></div>
-              <div> - Core/Compulsory</div>
+              <div>Core / Compulsory</div>
             </div>
             <div className="color-legend-item">
               <div className="color-box-electives"></div>
-              <div> - Electives/Directed</div>
+              <div>Electives / Directed</div>
             </div>
           </div>
         </header>
-        <div className="error-msg">
-          {errorMsg && (
-            <>
-              <FontAwesomeIcon
-                icon={faCircleXmark}
-                style={{ paddingRight: "5px" }}
-              ></FontAwesomeIcon>
-              {errorMsg}
-            </>
-          )}
-        </div>
-        {warning && (
-          <div className="warning-msg">
-            <FontAwesomeIcon
-              icon={faCircleExclamation}
-              style={{ paddingRight: "5px" }}
-            ></FontAwesomeIcon>
-            {warning.message}
-            <ul>
-              {warning.data.map((AK) => {
-                return (
-                  <li>
-                    {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
-                      }`}
-                  </li>
-                );
-              })}
-            </ul>
+
+        <CSSTransition in={isErrOrWarn} timeout={1000} classNames="fade">
+          <div className="error-n-warn">
+            {errorMsg && (
+              <div className="error-msg">
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  style={{ paddingRight: "5px" }}
+                ></FontAwesomeIcon>
+                {errorMsg}
+              </div>
+            )}
+            {warning && (
+              <div className="warning-msg">
+                <FontAwesomeIcon
+                  icon={faCircleExclamation}
+                  style={{ paddingRight: "5px" }}
+                ></FontAwesomeIcon>
+                {warning.message}
+                <ul>
+                  {warning.data.map((AK) => {
+                    return (
+                      <li>
+                        {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
+                          }`}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
-        )}
+        </CSSTransition>
+
         <div className="content">
           <div className="mainContent">
             <div className="droptable">
@@ -232,8 +214,6 @@ function UserMain() {
               </div>
 
               <div className="buttons">
-                <div className="blank"></div>
-
                 <Link
                   key="link__back"
                   className="link__back"
@@ -245,7 +225,6 @@ function UserMain() {
                 <button className="btn-clear" onClick={handleClearPath}>
                   Clear
                 </button>
-
                 <button className="btn__showpath" onClick={generatePath}>
                   Show My Path
                 </button>

@@ -3,33 +3,94 @@
   flex-direction: column;
 }
 
-.content {
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.maincontent {
-  display: flex;
-  flex-direction: column;
-}
-
 /* Header */
 .UserMain header {
-  padding: 10px 30px;
+  padding: 20px 50px 10px 50px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0px 10px 10px -8px var(--bright-gray);
+}
+.UserMain header a {
+  box-shadow: none;
+}
+.UserMain header .logo {
+  margin-right: 50px;
+  width: 130px;
 }
 
-.logo {
-  margin-right: 50px;
-  width: 200px;
+/* Credit */
+.credit {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-weight: bold;
+  min-width: 90px;
+}
+
+.credit .current-credit {
+  font-size: 12px;
+}
+
+.credit .num {
+  margin-top: 2px;
+  display: flex;
+  align-items: baseline;
+}
+
+.credit .num .current-credit-num {
+  margin-right: 5px;
+  font-weight: bolder;
+  font-size: 28px;
+}
+
+.credit .num .total-credit {
+  font-size: 13px;
+}
+
+/* Color Legend */
+.color-legend {
+  margin-left: 10px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 200px;
+  height: 50px;
+  border-radius: 5px;
+}
+.color-legend-item {
+  display: flex;
+  align-items: center;
+  font-weight: bolder;
+}
+.color-box-compulsory {
+  margin-right: 10px;
+  width: 15px;
+  height: 15px;
+  background-color: var(--blue);
+  border-radius: 5px;
+}
+.color-box-electives {
+  margin-right: 10px;
+  width: 15px;
+  height: 15px;
+  background-color: var(--light-blue);
+  border-radius: 5px;
 }
 
 /* error message */
+.error-n-warn {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+}
+
 .error-msg {
   padding: 10px 0;
   margin: auto;
@@ -56,31 +117,17 @@
   font-size: 13px;
 }
 
-.credit {
+/* Content */
+.content {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.mainContent {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  font-weight: bold;
-}
-
-.credit .current-credit {
-  font-size: 12px;
-}
-
-.credit .num {
-  margin-top: 2px;
-  display: flex;
-  align-items: baseline;
-}
-
-.credit .num .current-credit-num {
-  margin-right: 5px;
-  font-weight: bolder;
-  font-size: 17px;
-}
-
-.credit .num .total-credit {
-  font-size: 13px;
 }
 
 /* Drop Table */
@@ -98,15 +145,19 @@
 }
 
 .droptable .tableHeader .header__year {
-  padding: 10px;
+  padding: 0 10px 5px 10px;
   width: 100px;
   text-align: center;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .droptable .tableHeader .header__tri {
-  padding: 10px;
-  width: 300px;
+  padding: 0 10px 5px 10px;
+  width: 280px;
   text-align: center;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 /* Dropboxes */
@@ -122,6 +173,7 @@
   line-height: 120px;
   text-align: center;
   font-size: 25px;
+  font-weight: 600;
 }
 
 .DropBox .box {
@@ -129,10 +181,10 @@
   flex-direction: row;
   flex-wrap: wrap;
   margin: var(--dropcontent-margin);
-  width: 300px;
+  width: 280px;
   height: 120px;
   border-radius: 5px;
-  background-color: var(--placeholder-color);
+  background-color: white;
   box-shadow: 0px 0px 4px 1px var(--bright-gray);
 }
 .DropBox .box-allowed {
@@ -153,18 +205,14 @@
 
 button.btn__addYear {
   margin: var(--dropcontent-margin);
-  width: calc(860px + var(--dropcontent-margin) * 4);
+  width: calc(800px + var(--dropcontent-margin) * 4);
   height: 30px;
   font-weight: bolder;
   color: var(--dark-gray);
-  background-color: var(--placeholder-color);
+  background-color: white;
 }
 button.btn__addYear:hover {
-  color: var(--dark-gray);
   background-color: var(--bright-gray);
-}
-button.btn__addYear:active {
-  background-color: var(--gray);
 }
 
 /* Delete Year Button */
@@ -176,15 +224,12 @@ button.deleteYear {
 }
 
 button.btn__deleteyear {
-  background-color: var(--placeholder-color);
+  background-color: white;
   height: 30px;
   width: 30px;
 }
 button.btn__deleteyear:hover {
   background-color: var(--bright-gray);
-}
-button.btn__deleteyear:active {
-  background-color: var(--gray);
 }
 
 button.btn__deleteyear .iconTrashCan {
@@ -193,19 +238,15 @@ button.btn__deleteyear .iconTrashCan {
 
 /* Show My Path & Back buttons */
 .buttons {
+  margin-right: 5px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-}
-
-.buttons .blank {
-  width: 600px;
+  justify-content: flex-end;
 }
 
 /* Back button */
 .buttons .link__back {
   margin: var(--dropcontent-margin);
-  width: 200px;
   width: 100px;
   height: 35px;
   background-color: var(--gray);
@@ -214,6 +255,19 @@ button.btn__deleteyear .iconTrashCan {
 .buttons .link__back:hover {
   background-color: white;
   color: var(--gray);
+}
+
+/* Clear Course button */
+.buttons .btn-clear {
+  margin: var(--dropcontent-margin);
+  width: 100px;
+  height: 35px;
+  color: var(--gray);
+  background-color: white;
+}
+.buttons .btn-clear:hover {
+  color: white;
+  background-color: var(--gray);
 }
 
 /* Show My Path button */
@@ -229,90 +283,31 @@ button.btn__deleteyear .iconTrashCan {
   color: var(--blue);
 }
 
-/* Clear Course button */
-.buttons .btn-clear {
-  margin: var(--dropcontent-margin);
-  width: 100px;
-  height: 35px;
-}
 .buttons .btn-save {
-  background-color: var(--dark-red);
   margin: var(--dropcontent-margin);
   width: 100px;
   height: 35px;
   color: white;
+  background-color: var(--red);
 }
+.buttons .btn-save:hover {
+  color: var(--red);
+  background-color: white;
+}
+
 /****************************/
 /* <SelectCourse> component */
 .SelectCourse {
+  margin: 20px 0 20px 40px;
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Content Header */
-.contentHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-/* Search Box */
-.searchBox {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-end;
-  width: 300px;
-  height: 40px;
-  border-radius: 5px 5px 0 0;
-  background-color: var(--bright-gray);
-}
-
-.input__search {
-  width: 220px;
-  height: 30px;
-}
-
-.btn__search {
-  margin-left: 10px;
-  width: 35px;
-  height: 30px;
-  background-color: var(--blue);
-}
-
-.btn__search .faMagnifyingGlass {
-  color: white;
-}
-
-/* Title */
-.SelectCourse .title {
-  width: 500px;
-  line-height: 40px;
-  text-align: center;
-  font-size: 25px;
-}
-
-.contentHeader .blank {
-  width: 300px;
-}
-
-/* Course Table */
-.coursetable {
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  width: 1100px;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  border-radius: 0 5px 5px 5px;
-  background-color: var(--bright-gray);
-}
-
-.coursetable .tableHeader,
-.coursetable .courseBox {
-  padding-top: 20px;
+.tableHeader,
+.courseBox {
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -321,25 +316,33 @@ button.btn__deleteyear .iconTrashCan {
 /* Table Top*/
 
 .header__core {
-  width: 450px;
+  padding-bottom: 10px;
+  width: 420px;
   text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0px 10px 10px -8px var(--bright-gray);
 }
 
 .header__major1,
 .header__major2 {
-  width: 300px;
+  margin-left: 10px;
+  padding-bottom: 10px;
+  width: 280px;
   text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0px 10px 10px -8px var(--bright-gray);
 }
 
 .box__core {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 450px;
+  width: 420px;
   min-height: 120px;
   text-align: center;
   border-radius: 5px;
-  background-color: var(--placeholder-color);
   box-shadow: 0px 0px 4px 1px var(--bright-gray);
 }
 
@@ -348,26 +351,26 @@ button.btn__deleteyear .iconTrashCan {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-left: 5px;
-  width: 300px;
+  margin-left: 10px;
+  width: 280px;
   text-align: center;
   border-radius: 5px;
-  background-color: var(--placeholder-color);
   box-shadow: 0px 0px 4px 1px var(--bright-gray);
 }
 
 /**************************/
 /* <Course Card> component*/
 .CourseCard {
-  margin: 10px 15px 10px 15px;
+  margin: 10px;
   width: 120px;
   height: 40px;
   border-radius: 5px;
-  background-color: var(--blue);
+  background-color: var(--light-blue);
   color: white;
   text-align: center;
+  font-weight: bold;
   line-height: 40px;
-  box-shadow: 0px 0px 4px 1px var(--gray);
+  box-shadow: 0px 0px 4px 1px var(--card-shadow-gray);
 }
 
 .CourseCard-name {
@@ -376,37 +379,18 @@ button.btn__deleteyear .iconTrashCan {
   flex-direction: column;
   justify-content: center;
   padding: 0;
-  margin: 10px 15px 10px 15px;
+  margin: 10px;
   width: 120px;
   height: 40px;
   border-radius: 5px;
-  background-color: var(--blue);
+  background-color: var(--light-blue);
   color: white;
   text-align: center;
-  /* word-wrap: break-word; */
-
   overflow: hidden;
   font-size: 11px;
+  font-weight: bold;
   box-shadow: 0px 0px 4px 1px var(--gray);
 }
 .course-compulsory {
-  background-color: var(--red) !important;
-}
-
-.color-box-compulsory {
-  width: 15px;
-  height: 15px;
-  background-color: var(--red);
-}
-.color-box-electives {
-  width: 15px;
-  height: 15px;
   background-color: var(--blue);
-}
-.color-legend-item {
-  display: flex;
-  align-items: center;
-  font-weight: bolder;
-}
-.color-legend {
 }

@@ -7,12 +7,19 @@ import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom";
 const UserContext = React.createContext();
 function UserContextProvider({ children }) {
   const [userInfo, setUserInfo] = useState({
-    campus: "",
-    degree: "",
-    major1: "",
-    major2: "",
-    startYear: "",
+    campus: "SG001",
+    degree: "11497",
+    major1: "1",
+    major2: "2",
+    startYear: "2017",
   });
+  // const [userInfo, setUserInfo] = useState({
+  //   campus: "",
+  //   degree: "",
+  //   major1: "",
+  //   major2: "",
+  //   startYear: "",
+  // });
   const [isErrorMsgSelected, setIsErrorMsgSelected] = useState(false);
   const [isCampusSelected, setIsCampusSelected] = useState(false);
   const [isDegreeSelected, setIsDegreeSelected] = useState(false);
@@ -144,9 +151,9 @@ function UserContextProvider({ children }) {
       userInfo.major2 === ""
         ? null
         : await axios({
-            method: "GET",
-            url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
-          });
+          method: "GET",
+          url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
+        });
     const major2Courses = major2CourseRes
       ? processCourseList(major2CourseRes.data.result, "major2")
       : [];
@@ -202,6 +209,8 @@ function UserContextProvider({ children }) {
 
   function onYearAddClick(e) {
     setErrorMsg("");
+    setWarning(null);
+    setIsErrOrWarn(false);
 
     // Check maximum year number (if you want 6 years maximum: > 6)
     if (yearCount.length + 1 > maxYear) {
@@ -216,6 +225,8 @@ function UserContextProvider({ children }) {
 
   function onYearDeleteClick(e) {
     setErrorMsg("");
+    setWarning(null);
+    setIsErrOrWarn(false);
 
     // Check minimum year number
     if (yearCount.length - 1 < 2) {
@@ -238,10 +249,25 @@ function UserContextProvider({ children }) {
       major2: "",
       startYear: "",
     });
+    setYearCount([0, 1]);
     setErrorMsg("");
     setWarning(null);
     setIsErrOrWarn(false);
     setIsErrorMsgSelected(false);
+  }
+
+  function handleClearPath() {
+    setCourseBoxes((prevBoxes) => {
+      return prevBoxes.map((course) => {
+        return {
+          ...course,
+          box: `box__${course.type}`,
+        };
+      });
+    });
+    setErrorMsg("");
+    setWarning(null);
+    setIsErrOrWarn(false);
   }
 
   // Following 'courseBoxes' state value, render <CourseCard> corresponding box
@@ -379,7 +405,7 @@ function UserContextProvider({ children }) {
           type === "major1" &&
           box.substr(0, 3) === "box" &&
           currentMajor1Credit + unit + getUnit(prevBoxes, type, false, true) >
-            totalMajor1Credit
+          totalMajor1Credit
         ) {
           setErrorMsg(`You have reach maximum directed course for major 1`);
           return [...prevBoxes];
@@ -388,7 +414,7 @@ function UserContextProvider({ children }) {
           type === "major2" &&
           box.substr(0, 3) === "box" &&
           currentMajor2Credit + unit + getUnit(prevBoxes, type, false, true) >
-            totalMajor2Credit
+          totalMajor2Credit
         ) {
           setErrorMsg(`You have reach maximum directed course for major 2`);
           return [...prevBoxes];
@@ -398,10 +424,10 @@ function UserContextProvider({ children }) {
           type === "core" &&
           box.substr(0, 3) === "box" &&
           totalMajor1Credit +
-            totalMajor2Credit +
-            getCoreUnit(prevBoxes) +
-            unit >
-            totalCredit
+          totalMajor2Credit +
+          getCoreUnit(prevBoxes) +
+          unit >
+          totalCredit
         ) {
           setErrorMsg(`You have reach maximum elective course for your degree`);
           return [...prevBoxes];
@@ -445,8 +471,8 @@ function UserContextProvider({ children }) {
         isCompleted
           ? curVal.box.substr(0, 3) !== "box"
           : curVal.box.substr(0, 3) === "box" &&
-            curVal.type === type &&
-            curVal.isCompulsory === isCompulsory
+          curVal.type === type &&
+          curVal.isCompulsory === isCompulsory
       )
         return (prevVal = prevVal + curVal.unit);
       else return prevVal;
@@ -460,6 +486,7 @@ function UserContextProvider({ children }) {
       else return prevVal;
     }, 0);
   }
+
   function generatePath() {
     setIsLoadingPath(true);
     let { year, semester } = getNextYearAndSem(courseBoxes);
@@ -485,7 +512,7 @@ function UserContextProvider({ children }) {
         const partB = courseList.find(
           (c) =>
             c.courseId ===
-              `${course.courseId.substr(0, course.courseId.length - 1)}B` &&
+            `${course.courseId.substr(0, course.courseId.length - 1)}B` &&
             c.box.substr(0, 3) === "box"
         );
         let nextSemester =
@@ -567,9 +594,8 @@ function UserContextProvider({ children }) {
               (c) =>
                 c.courseId === `${courseId.substr(0, courseId.length - 1)}B`
             );
-            courseList[partBIndex].box = `${
-              semester === 3 ? year + 1 : year
-            }__tri${semester === 3 ? 1 : semester + 1}`;
+            courseList[partBIndex].box = `${semester === 3 ? year + 1 : year
+              }__tri${semester === 3 ? 1 : semester + 1}`;
 
             credit = credit + unit + courseList[partBIndex].unit;
 
@@ -587,9 +613,9 @@ function UserContextProvider({ children }) {
             major1Credit < targetMajor1Credit &&
             (course.isCompulsory ||
               major1Credit +
-                course.unit +
-                getUnit(courseList, "major1", false, true) <=
-                targetMajor1Credit)
+              course.unit +
+              getUnit(courseList, "major1", false, true) <=
+              targetMajor1Credit)
           ) {
             major1Credit += unit;
             numOfCourse++;
@@ -604,9 +630,9 @@ function UserContextProvider({ children }) {
             major2Credit < targetMajor2Credit &&
             (course.isCompulsory ||
               major2Credit +
-                course.unit +
-                getUnit(courseList, "major2", false, true) <=
-                targetMajor2Credit)
+              course.unit +
+              getUnit(courseList, "major2", false, true) <=
+              targetMajor2Credit)
           ) {
             major2Credit += unit;
             numOfCourse++;
@@ -619,10 +645,10 @@ function UserContextProvider({ children }) {
             course.type === "core" &&
             (course.isCompulsory ||
               targetMajor1Credit +
-                targetMajor2Credit +
-                getCoreUnit(courseList) +
-                unit <
-                target)
+              targetMajor2Credit +
+              getCoreUnit(courseList) +
+              unit <
+              target)
           ) {
             numOfCourse++;
             credit += unit;
@@ -655,6 +681,7 @@ function UserContextProvider({ children }) {
       setCourseBoxes(courseList);
     }, 1000);
   }
+
   function checkAssumedKnowledge(courses, year, sem, assumedKnowledge) {
     //this function is to check if the assumed knowledge have been cleared
 
@@ -691,6 +718,7 @@ function UserContextProvider({ children }) {
     }
     return true;
   }
+
   function getNextYearAndSem(courses) {
     //get the year and semester where the user have dragged until
     const draggedCourses = courses.filter(
@@ -714,16 +742,8 @@ function UserContextProvider({ children }) {
     }
     return {};
   }
-  function handleClearPath() {
-    setCourseBoxes((prevBoxes) => {
-      return prevBoxes.map((course) => {
-        return {
-          ...course,
-          box: `box__${course.type}`,
-        };
-      });
-    });
-  }
+
+
   return (
     <UserContext.Provider
       value={{

@@ -1,10 +1,18 @@
 import logo from "../../logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+
 function TopBar() {
   return (
     <div className="top-bar">
-      <img src={logo} className="logo"></img>
+      <Link
+        key="link__home"
+        className="link__home"
+        to="/"
+      >
+        <img src={logo} className="logo" alt="logo" />
+      </Link>
       <button className="btn-gray">
         <FontAwesomeIcon icon={faRightToBracket}></FontAwesomeIcon>
         <span style={{ marginLeft: "10px" }}>Logout</span>

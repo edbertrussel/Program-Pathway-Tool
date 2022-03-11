@@ -6,13 +6,16 @@
   --dropcontent-margin: 10px;
 
   /* Colors */
+  --input-background-color: #ffffffb7;
   --placeholder-color: #ebebeb;
   --bright-gray: #d4dcdd;
   --gray: #6c7175;
+  --card-shadow-gray: #6c7175a2;
   --dark-gray: #414649;
   --yellow: #e3b314;
   --red: #b85252;
   --dark-red: #84232a;
+  --light-blue: #42c2ff;
   --blue: #0099ff;
   --dark-blue: #006ccb;
 }
@@ -57,7 +60,7 @@ input {
   padding: 0 0 0 10px;
   border: none;
   font-family: 'Roboto', sans-serif;
-  background-color: var(--placeholder-color);
+  background-color: var(--input-background-color);
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.5s;
