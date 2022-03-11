@@ -46,6 +46,8 @@ function UserContextProvider({ children }) {
   const [isLoadingPath, setIsLoadingPath] = useState(false);
   const [isPathCompleted, setIsPathCompleted] = useState(false);
   const [isUnitSufficient, setIsUnitSufficient] = useState(true);
+  const [isExportAs, setIsExportAs] = useState(false);
+
   // -----For <InfoCheck> Pages-------------------------------------------------------
   async function getInfoData(url, type) {
     try {
@@ -312,6 +314,7 @@ function UserContextProvider({ children }) {
   function onDrop(dropId, boxName) {
     setWarning(null);
     setErrorMsg(null);
+    setIsErrOrWarn(false);
 
     setCourseBoxes((prevBoxes) => {
       const dropYear = parseInt(boxName.substr(0, 4)); //get the year from boxName eg 2018_tri1 -> 2018
@@ -327,6 +330,7 @@ function UserContextProvider({ children }) {
       if (prevBoxes.filter((course) => course.box === boxName).length > 3) {
         //restrict to at most 4 courses in one semester
         setErrorMsg("You can only have at most 4 courses in one semester");
+        setIsErrOrWarn(true);
         return [...prevBoxes];
       }
       if (dropId.substr(-1) === "A") {
@@ -351,6 +355,7 @@ function UserContextProvider({ children }) {
           setErrorMsg(
             `${dropId} and ${courseId} must be completed in consecutive terms`
           );
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
       }
@@ -375,6 +380,7 @@ function UserContextProvider({ children }) {
           setErrorMsg(
             `${courseId} and ${dropId} must be completed in consecutive terms`
           );
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
       }
@@ -403,6 +409,7 @@ function UserContextProvider({ children }) {
         setErrorMsg(
           `${dropId} require you to complete ${requiredUnit} units before enrolled`
         );
+        setIsErrOrWarn(true);
 
         return [...prevBoxes];
       }
@@ -414,6 +421,7 @@ function UserContextProvider({ children }) {
             totalMajor1Credit
         ) {
           setErrorMsg(`You have reach maximum directed course for major 1`);
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
         if (
@@ -423,6 +431,7 @@ function UserContextProvider({ children }) {
             totalMajor2Credit
         ) {
           setErrorMsg(`You have reach maximum directed course for major 2`);
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
 
@@ -436,6 +445,7 @@ function UserContextProvider({ children }) {
             totalCredit
         ) {
           setErrorMsg(`You have reach maximum elective course for your degree`);
+          setIsErrOrWarn(true);
           return [...prevBoxes];
         }
       }
@@ -451,6 +461,7 @@ function UserContextProvider({ children }) {
         setErrorMsg(
           `${dropId} is not offered in ${dropYear} Tri ${dropSemester}`
         );
+        setIsErrOrWarn(true);
         return [...prevBoxes];
       }
       if (
@@ -461,6 +472,7 @@ function UserContextProvider({ children }) {
       ) {
         let message = `For ${dropId}, Please make sure you have completed the following courses before enrolled`;
         setWarning({ message, data: assumedKnowledge });
+        setIsErrOrWarn(true);
       }
 
       return prevBoxes.map((Box) => {
@@ -716,6 +728,7 @@ function UserContextProvider({ children }) {
       //create a loading with 1 second
       setErrorMsg(null);
       setWarning(null);
+      setIsErrOrWarn(false);
       setIsLoadingPath(false);
 
       setYearCount([
@@ -788,6 +801,17 @@ function UserContextProvider({ children }) {
     return {};
   }
 
+
+  function onExportAsClicked() {
+    setIsExportAs(true);
+  }
+
+  function onExportCancelClicked() {
+    setIsExportAs(false);
+  }
+
+
+
   return (
     <UserContext.Provider
       value={{
@@ -817,6 +841,7 @@ function UserContextProvider({ children }) {
         isLoadingPath,
         isPathCompleted,
         isUnitSufficient,
+        isExportAs,
         setIsPathCompleted,
         handleClearPath,
         setIsLoadingPath,
@@ -837,6 +862,8 @@ function UserContextProvider({ children }) {
         onDrag,
         onDrop,
         generatePath,
+        onExportAsClicked,
+        onExportCancelClicked,
       }}
     >
       {children}

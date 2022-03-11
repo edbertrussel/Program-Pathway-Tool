@@ -8,6 +8,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
+import Pdf from "react-to-pdf";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
@@ -38,8 +39,20 @@ function UserMain() {
     isPathCompleted,
     setIsPathCompleted,
     isUnitSufficient,
+    isExportAs,
+    onExportAsClicked,
+    onExportCancelClicked,
   } = useUserContext();
+
   const startYear = parseInt(userInfo.startYear);
+
+  // PDF variables
+  const pdfRef = React.createRef();
+  const options = {
+    orientation: 'landscape',
+    unit: 'in',
+    format: [12, 10]
+  };
 
   useEffect(() => {
     getCourseCardData();
@@ -185,38 +198,46 @@ function UserMain() {
         </CSSTransition>
 
         <div className="content">
-          <div className="mainContent">
+          <div>
             <div className="droptable">
-              <div className="tableHeader">
-                <div className="header__year">Year</div>
-                <div className="header__tri">Trimester 1</div>
-                <div className="header__tri">Trimester 2</div>
-                <div className="header__tri">Trimester 3</div>
-              </div>
-              <TransitionGroup>
-                {yearCount.map((i) => {
-                  const year = new Date().getFullYear();
-                  const yearAvailability = !DragAvailablity
-                    ? null
-                    : DragAvailablity.filter(
+
+              <div className="pdf-area" ref={pdfRef}>
+                <div className="tableHeader">
+                  <div className="header__year">Year</div>
+                  <div className="header__tri">Trimester 1</div>
+                  <div className="header__tri">Trimester 2</div>
+                  <div className="header__tri">Trimester 3</div>
+                </div>
+                <TransitionGroup>
+                  {yearCount.map((i) => {
+                    const year = new Date().getFullYear();
+                    const yearAvailability = !DragAvailablity
+                      ? null
+                      : DragAvailablity.filter(
                         (availability) => availability.year === startYear + i
                       ).length !== 0 || startYear + i > year
-                    ? DragAvailablity.filter(
-                        (availability) => availability.year === startYear + i
-                      )
-                    : null;
+                        ? DragAvailablity.filter(
+                          (availability) => availability.year === startYear + i
+                        )
+                        : null;
 
-                  return (
-                    <CSSTransition key={i} timeout={500} classNames="fade">
-                      <DropBox
-                        key={startYear + i}
-                        year={startYear + i}
-                        availability={yearAvailability}
-                      />
-                    </CSSTransition>
-                  );
-                })}
-              </TransitionGroup>
+                    return (
+                      <CSSTransition
+                        key={i}
+                        timeout={500}
+                        classNames="fade"
+                      >
+                        <DropBox
+                          key={startYear + i}
+                          year={startYear + i}
+                          availability={yearAvailability}
+                        />
+                      </CSSTransition>
+                    )
+                  })}
+                </TransitionGroup>
+              </div>
+
 
               <div className="handleYear">
                 <div className="blank"></div>
@@ -256,16 +277,44 @@ function UserMain() {
                   Show My Path
                 </button>
                 {isPathCompleted && (
-                  <button className="btn-save">Save As</button>
+                  <button
+                    className="btn-export"
+                    onClick={() => onExportAsClicked()}
+                  >
+                    Export as
+                  </button>
+                )}
+                {isExportAs && (
+                  <div className="black-background">
+                    <div className="exportas-msgbox">
+                      <button
+                        className="btn-cancel"
+                        onClick={() => onExportCancelClicked()}
+                      >
+                        X
+                      </button>
+                      <h2>How do you want to export?</h2>
+                      <div className="export-btn-group">
+                        <Pdf targetRef={pdfRef} filename="ShowMyPath.pdf" options={options} scale={1}>
+                          {({ toPdf }) => (
+                            <button className="btn-pdf" onClick={toPdf}>PDF</button>
+                          )}
+                        </Pdf>
+                        <button className="btn-png">PNG</button>
+                        <button className="btn-print">Print</button>
+                        <button className="btn-email">Email</button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
-
             <SelectCourse />
+
           </div>
         </div>
       </div>
-    </DndProvider>
+    </DndProvider >
   );
 }
 
