@@ -8,9 +8,9 @@ const UserContext = React.createContext();
 function UserContextProvider({ children }) {
   const [userInfo, setUserInfo] = useState({
     campus: "SG001",
-    degree: "11497",
-    major1: "1",
-    major2: "2",
+    degree: "",
+    major1: "",
+    major2: "",
     startYear: "2017",
   });
   // const [userInfo, setUserInfo] = useState({
@@ -45,7 +45,9 @@ function UserContextProvider({ children }) {
   const [isHover, setIsHover] = useState(false);
   const [isLoadingPath, setIsLoadingPath] = useState(false);
   const [isPathCompleted, setIsPathCompleted] = useState(false);
+  const [isUnitSufficient, setIsUnitSufficient] = useState(true);
   const [isExportAs, setIsExportAs] = useState(false);
+
   // -----For <InfoCheck> Pages-------------------------------------------------------
   async function getInfoData(url, type) {
     try {
@@ -78,7 +80,7 @@ function UserContextProvider({ children }) {
       )
     );
     setIsCampusSelected(true);
-  };
+  }
   async function handleDegreeChange(e) {
     setUserInfo({ ...userInfo, degree: e.target.value });
     setMajor1Data(
@@ -88,15 +90,17 @@ function UserContextProvider({ children }) {
       )
     );
     setIsDegreeSelected(true);
-  };
+  }
   function handleMajor1Change(e) {
     setUserInfo({ ...userInfo, major1: e.target.value });
 
     //Option that is selected in major1 does not appear on major2 list
-    setMajor2Data(major1Data.filter(arr => arr.MajorId.toString() !== e.target.value));
+    setMajor2Data(
+      major1Data.filter((arr) => arr.MajorId.toString() !== e.target.value)
+    );
     setYearData(yearObj);
     setIsMajor1Selected(true);
-  };
+  }
   function handleMajor2Change(e) {
     setUserInfo({ ...userInfo, major2: e.target.value });
   }
@@ -120,53 +124,61 @@ function UserContextProvider({ children }) {
   // -----For <UserMain> Pages-------------------------------------------------------
   // Get course data according to the selected option
   async function getCourseCardData(paramObj = {}) {
-    const degreeRes = await axios({
-      method: "GET",
-      url: `http://localhost:5000/api/degree/${userInfo.degree}`,
-    });
-    const major1Res = await axios({
-      method: "GET",
-      url: `http://localhost:5000/api/major/${userInfo.major1}`,
-    });
-    const major2Res = await axios({
-      method: "GET",
-      url: `http://localhost:5000/api/major/${userInfo.major2}`,
-    });
-    const { Max_Year, Total_Credit } = degreeRes.data.result;
-    console.log(major1Res);
-    setMaxYear(Max_Year);
-    setTotalCredit(Total_Credit);
-    setMajor1TotalCredit(major1Res.data.result.Total_Unit);
-    setMajor2TotalCredit(major2Res.data.result.Total_Unit);
-    let courseIDList = [];
-    const degreeCourseRes = await axios({
-      method: "GET",
-      url: `http://localhost:5000/api/degree/${userInfo.degree}/course`,
-    });
+    try {
+      const degreeRes = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/degree/${userInfo.degree}`,
+      });
+      const major1Res = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/major/${userInfo.major1}`,
+      });
+      const major2Res = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/major/${userInfo.major2}`,
+      });
+      const { Max_Year, Total_Credit } = degreeRes.data.result;
+      console.log(major1Res);
+      setMaxYear(Max_Year);
+      setTotalCredit(Total_Credit);
+      setMajor1TotalCredit(major1Res.data.result.Total_Unit);
+      setMajor2TotalCredit(major2Res.data.result.Total_Unit);
+      let courseIDList = [];
+      const degreeCourseRes = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/degree/${userInfo.degree}/course`,
+      });
 
-    const major1CourseRes = await axios({
-      method: "GET",
-      url: `http://localhost:5000/api/major/${userInfo.major1}/course`,
-    });
-    const major2CourseRes =
-      userInfo.major2 === ""
-        ? null
-        : await axios({
-          method: "GET",
-          url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
-        });
-    const major2Courses = major2CourseRes
-      ? processCourseList(major2CourseRes.data.result, "major2")
-      : [];
+      const major1CourseRes = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/major/${userInfo.major1}/course`,
+      });
+      const major2CourseRes =
+        userInfo.major2 === ""
+          ? null
+          : await axios({
+              method: "GET",
+              url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
+            });
+      const major2Courses = major2CourseRes
+        ? processCourseList(major2CourseRes.data.result, "major2")
+        : [];
 
-    courseIDList = [
-      ...courseIDList,
-      ...processCourseList(degreeCourseRes.data.result, "core"),
-      ...processCourseList(major1CourseRes.data.result, "major1"),
-      ...major2Courses,
-    ];
-
-    setCourseBoxes(courseIDList);
+      courseIDList = [
+        ...courseIDList,
+        ...processCourseList(degreeCourseRes.data.result, "core"),
+        ...processCourseList(major1CourseRes.data.result, "major1"),
+        ...major2Courses,
+      ];
+      const courseUnit = courseIDList.reduce((prev, cur) => {
+        return prev + cur.unit;
+      }, 0);
+      console.log(Total_Credit);
+      setIsUnitSufficient(courseUnit >= Total_Credit ? true : false);
+      setCourseBoxes(courseIDList);
+    } catch (error) {
+      setIsUnitSufficient(false);
+    }
   }
   function processCourseList(courseList, type) {
     return courseList.map((course) => {
@@ -406,7 +418,7 @@ function UserContextProvider({ children }) {
           type === "major1" &&
           box.substr(0, 3) === "box" &&
           currentMajor1Credit + unit + getUnit(prevBoxes, type, false, true) >
-          totalMajor1Credit
+            totalMajor1Credit
         ) {
           setErrorMsg(`You have reach maximum directed course for major 1`);
           setIsErrOrWarn(true);
@@ -416,7 +428,7 @@ function UserContextProvider({ children }) {
           type === "major2" &&
           box.substr(0, 3) === "box" &&
           currentMajor2Credit + unit + getUnit(prevBoxes, type, false, true) >
-          totalMajor2Credit
+            totalMajor2Credit
         ) {
           setErrorMsg(`You have reach maximum directed course for major 2`);
           setIsErrOrWarn(true);
@@ -427,10 +439,10 @@ function UserContextProvider({ children }) {
           type === "core" &&
           box.substr(0, 3) === "box" &&
           totalMajor1Credit +
-          totalMajor2Credit +
-          getCoreUnit(prevBoxes) +
-          unit >
-          totalCredit
+            totalMajor2Credit +
+            getCoreUnit(prevBoxes) +
+            unit >
+            totalCredit
         ) {
           setErrorMsg(`You have reach maximum elective course for your degree`);
           setIsErrOrWarn(true);
@@ -522,7 +534,7 @@ function UserContextProvider({ children }) {
         const partB = courseList.find(
           (c) =>
             c.courseId ===
-            `${course.courseId.substr(0, course.courseId.length - 1)}B` &&
+              `${course.courseId.substr(0, course.courseId.length - 1)}B` &&
             c.box.substr(0, 3) === "box"
         );
         let nextSemester =
@@ -639,8 +651,9 @@ function UserContextProvider({ children }) {
               (c) =>
                 c.courseId === `${courseId.substr(0, courseId.length - 1)}B`
             );
-            courseList[partBIndex].box = `${semester === 3 ? year + 1 : year
-              }__tri${semester === 3 ? 1 : semester + 1}`;
+            courseList[partBIndex].box = `${
+              semester === 3 ? year + 1 : year
+            }__tri${semester === 3 ? 1 : semester + 1}`;
             console.log(credit);
             credit = credit + unit + courseList[partBIndex].unit;
             console.log(credit);
@@ -658,9 +671,9 @@ function UserContextProvider({ children }) {
             major1Credit < targetMajor1Credit &&
             (course.isCompulsory ||
               major1Credit +
-              course.unit +
-              getUnit(courseList, "major1", false, true) <=
-              targetMajor1Credit)
+                course.unit +
+                getUnit(courseList, "major1", false, true) <=
+                targetMajor1Credit)
           ) {
             major1Credit += unit;
             numOfCourse++;
@@ -675,9 +688,9 @@ function UserContextProvider({ children }) {
             major2Credit < targetMajor2Credit &&
             (course.isCompulsory ||
               major2Credit +
-              course.unit +
-              getUnit(courseList, "major2", false, true) <=
-              targetMajor2Credit)
+                course.unit +
+                getUnit(courseList, "major2", false, true) <=
+                targetMajor2Credit)
           ) {
             major2Credit += unit;
             numOfCourse++;
@@ -690,10 +703,10 @@ function UserContextProvider({ children }) {
             course.type === "core" &&
             (course.isCompulsory ||
               targetMajor1Credit +
-              targetMajor2Credit +
-              getCoreUnit(courseList) +
-              unit <
-              target)
+                targetMajor2Credit +
+                getCoreUnit(courseList) +
+                unit <
+                target)
           ) {
             numOfCourse++;
             credit += unit;
@@ -788,6 +801,7 @@ function UserContextProvider({ children }) {
     return {};
   }
 
+
   function onExportAsClicked() {
     setIsExportAs(true);
   }
@@ -795,6 +809,7 @@ function UserContextProvider({ children }) {
   function onExportCancelClicked() {
     setIsExportAs(false);
   }
+
 
 
   return (
@@ -825,6 +840,7 @@ function UserContextProvider({ children }) {
         isHover,
         isLoadingPath,
         isPathCompleted,
+        isUnitSufficient,
         isExportAs,
         setIsPathCompleted,
         handleClearPath,
