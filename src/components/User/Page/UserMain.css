@@ -83,6 +83,13 @@
 }
 
 /* error message */
+.error-page-msg{
+  
+  margin:10px auto;
+  width: 700px;
+  
+}
+
 .error-n-warn {
   margin-top: 10px;
   display: flex;

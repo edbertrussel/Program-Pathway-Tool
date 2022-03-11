@@ -4,8 +4,8 @@ import "./UserMain.css";
 import SelectCourse from "../SelectCourse.js";
 import DropBox from "../DropBox.js";
 import React, { useEffect } from "react";
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,6 +37,7 @@ function UserMain() {
     handleClearPath,
     isPathCompleted,
     setIsPathCompleted,
+    isUnitSufficient,
   } = useUserContext();
   const startYear = parseInt(userInfo.startYear);
 
@@ -58,10 +59,39 @@ function UserMain() {
       setIsPathCompleted(true);
     } else setIsPathCompleted(false);
   }, [currentCredit, currentMajor1Credit, currentMajor2Credit]);
-
+  if (!isUnitSufficient)
+    return (
+      <div className="usermain">
+        <header>
+          <Link
+            key="link__home"
+            className="link__home"
+            to="/"
+            onClick={() => onBackClick()}
+          >
+            <img src={logo} className="logo" alt="logo" />
+          </Link>
+        </header>
+        <h2 className="error-page-msg">
+          The course units are not enough to reach the requirement, Please check
+          if you have choose the right majors, you might need to choose the
+          second major.
+        </h2>
+        <div className="buttons">
+          <Link
+            key="link__back"
+            className="link__back"
+            to="/"
+            onClick={() => onBackClick()}
+            style={{ margin: "auto" }}
+          >
+            Back
+          </Link>
+        </div>
+      </div>
+    );
   return (
     <DndProvider backend={HTML5Backend}>
-
       {isLoadingPath && (
         <div className="black-background">
           <div
@@ -142,8 +172,9 @@ function UserMain() {
                   {warning.data.map((AK) => {
                     return (
                       <li>
-                        {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
-                          }`}
+                        {`${AK.Alternative1} ${
+                          AK.Alternative2 ? "or " + AK.Alternative2 : ""
+                        }`}
                       </li>
                     );
                   })}
@@ -168,26 +199,22 @@ function UserMain() {
                   const yearAvailability = !DragAvailablity
                     ? null
                     : DragAvailablity.filter(
-                      (availability) => availability.year === startYear + i
-                    ).length !== 0 || startYear + i > year
-                      ? DragAvailablity.filter(
+                        (availability) => availability.year === startYear + i
+                      ).length !== 0 || startYear + i > year
+                    ? DragAvailablity.filter(
                         (availability) => availability.year === startYear + i
                       )
-                      : null;
+                    : null;
 
                   return (
-                    <CSSTransition
-                      key={i}
-                      timeout={500}
-                      classNames="fade"
-                    >
+                    <CSSTransition key={i} timeout={500} classNames="fade">
                       <DropBox
                         key={startYear + i}
                         year={startYear + i}
                         availability={yearAvailability}
                       />
                     </CSSTransition>
-                  )
+                  );
                 })}
               </TransitionGroup>
 
