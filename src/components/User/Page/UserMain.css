@@ -3,6 +3,34 @@
   flex-direction: column;
 }
 
+/* Major Unit Error Page */
+.majorunit-error-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.majorunit-error-page > a {
+  margin-bottom: 50px;
+  box-shadow: none;
+}
+
+.majorunit-error-page > a > img {
+  width: 400px;
+}
+
+.error-page-msg {
+  margin-bottom: 60px;
+  width: 700px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Normal Main Page */
 /* Header */
 .UserMain header {
   padding: 20px 50px 10px 50px;
@@ -80,14 +108,6 @@
   height: 15px;
   background-color: var(--light-blue);
   border-radius: 5px;
-}
-
-/* error message */
-.error-page-msg{
-  
-  margin:10px auto;
-  width: 700px;
-  
 }
 
 .error-n-warn {
@@ -407,7 +427,7 @@ button.btn__deleteyear .iconTrashCan {
   background-color: var(--blue);
 }
 
-/* Save As Message Box */
+/* Export As Message Box */
 .exportas-msgbox {
   padding: 10px;
   margin: auto;

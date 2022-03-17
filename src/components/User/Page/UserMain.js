@@ -8,7 +8,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
-import Pdf from "react-to-pdf";
+import { exportComponentAsPDF, exportComponentAsPNG } from "react-component-export-image";
+import ReactToPrint from "react-to-print";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
@@ -46,13 +47,8 @@ function UserMain() {
 
   const startYear = parseInt(userInfo.startYear);
 
-  // PDF variables
-  const pdfRef = React.createRef();
-  const options = {
-    orientation: 'landscape',
-    unit: 'in',
-    format: [12, 10]
-  };
+  // Export form Ref
+  const convertImgRef = React.createRef();
 
   useEffect(() => {
     getCourseCardData();
@@ -72,10 +68,12 @@ function UserMain() {
       setIsPathCompleted(true);
     } else setIsPathCompleted(false);
   }, [currentCredit, currentMajor1Credit, currentMajor2Credit]);
+
+
   if (!isUnitSufficient)
     return (
-      <div className="usermain">
-        <header>
+      <div className="Usermain">
+        <div className="majorunit-error-page">
           <Link
             key="link__home"
             className="link__home"
@@ -84,25 +82,29 @@ function UserMain() {
           >
             <img src={logo} className="logo" alt="logo" />
           </Link>
-        </header>
-        <h2 className="error-page-msg">
-          The course units are not enough to reach the requirement, Please check
-          if you have choose the right majors, you might need to choose the
-          second major.
-        </h2>
-        <div className="buttons">
-          <Link
-            key="link__back"
-            className="link__back"
-            to="/"
-            onClick={() => onBackClick()}
-            style={{ margin: "auto" }}
-          >
-            Back
-          </Link>
+          <div className="error-page-msg">
+            The course units are not enough to reach the requirement.
+            <br></br>
+            <br></br>
+            Please check if you have choose the right majors.
+            <br></br>
+            You might need to choose the second major.
+          </div>
+          <div className="buttons">
+            <Link
+              key="link__back"
+              className="link__back"
+              to="/"
+              onClick={() => onBackClick()}
+              style={{ margin: "auto" }}
+            >
+              Back
+            </Link>
+          </div>
         </div>
       </div>
     );
+
   return (
     <DndProvider backend={HTML5Backend}>
       {isLoadingPath && (
@@ -185,9 +187,8 @@ function UserMain() {
                   {warning.data.map((AK) => {
                     return (
                       <li>
-                        {`${AK.Alternative1} ${
-                          AK.Alternative2 ? "or " + AK.Alternative2 : ""
-                        }`}
+                        {`${AK.Alternative1} ${AK.Alternative2 ? "or " + AK.Alternative2 : ""
+                          }`}
                       </li>
                     );
                   })}
@@ -201,7 +202,7 @@ function UserMain() {
           <div>
             <div className="droptable">
 
-              <div className="pdf-area" ref={pdfRef}>
+              <div className="pdf-area" ref={convertImgRef}>
                 <div className="tableHeader">
                   <div className="header__year">Year</div>
                   <div className="header__tri">Trimester 1</div>
@@ -295,14 +296,36 @@ function UserMain() {
                       </button>
                       <h2>How do you want to export?</h2>
                       <div className="export-btn-group">
-                        <Pdf targetRef={pdfRef} filename="ShowMyPath.pdf" options={options} scale={1}>
-                          {({ toPdf }) => (
-                            <button className="btn-pdf" onClick={toPdf}>PDF</button>
+
+                        <button
+                          className="btn-pdf"
+                          onClick={() => exportComponentAsPDF(
+                            convertImgRef,
+                            {
+                              fileName: "ShowMyPath",
+                              pdfOptions: {
+                                w: 1200,
+                                unit: "px",
+                                orientation: 'p',
+                                pdfFormat: 'a2',
+                              }
+                            }
                           )}
-                        </Pdf>
-                        <button className="btn-png">PNG</button>
-                        <button className="btn-print">Print</button>
-                        <button className="btn-email">Email</button>
+                        >
+                          PDF
+                        </button>
+                        <button
+                          className="btn-png"
+                          onClick={() => exportComponentAsPNG(
+                            convertImgRef, { fileName: "ShowMyPath" }
+                          )}
+                        >
+                          PNG
+                        </button>
+                        <ReactToPrint
+                          trigger={() => <button className="btn-print">Print</button>}
+                          content={() => convertImgRef.current}
+                        />
                       </div>
                     </div>
                   </div>

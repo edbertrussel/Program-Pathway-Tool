@@ -6,20 +6,20 @@ import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom";
 
 const UserContext = React.createContext();
 function UserContextProvider({ children }) {
-  const [userInfo, setUserInfo] = useState({
-    campus: "SG001",
-    degree: "",
-    major1: "",
-    major2: "",
-    startYear: "2017",
-  });
   // const [userInfo, setUserInfo] = useState({
-  //   campus: "",
+  //   campus: "SG001",
   //   degree: "",
   //   major1: "",
   //   major2: "",
-  //   startYear: "",
+  //   startYear: "2017",
   // });
+  const [userInfo, setUserInfo] = useState({
+    campus: "",
+    degree: "",
+    major1: "",
+    major2: "",
+    startYear: "",
+  });
   const [isErrorMsgSelected, setIsErrorMsgSelected] = useState(false);
   const [isCampusSelected, setIsCampusSelected] = useState(false);
   const [isDegreeSelected, setIsDegreeSelected] = useState(false);
