@@ -3,8 +3,10 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
 import { useAdminContext } from "../Context/AdminContext";
 import MessageBox from "./MessageBox";
+import { useNavigate } from "react-router-dom";
 function ToolBar() {
   const searchRef = useRef(null);
+  const navigate = useNavigate();
   const {
     isManagePressed,
     setIsManagePressed,
@@ -13,6 +15,7 @@ function ToolBar() {
     showDeleteMessage,
     closeDeleteMessage,
     onDeleteClicked,
+    selectedTab,
   } = useAdminContext();
 
   return (
@@ -43,7 +46,14 @@ function ToolBar() {
             <button className="btn-red" onClick={() => showDeleteMessage()}>
               Delete
             </button>
-            <button className="btn-blue">Add Item</button>
+            <button
+              className="btn-blue"
+              onClick={() =>
+                navigate(`/admin/${selectedTab.toLowerCase()}/add`)
+              }
+            >
+              Add Item
+            </button>
           </div>
         ) : (
           <button className="btn-blue" onClick={() => setIsManagePressed(true)}>

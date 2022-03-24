@@ -147,11 +147,17 @@ function UserContextProvider({ children }) {
       const degreeCourseRes = await axios({
         method: "GET",
         url: `http://localhost:5000/api/degree/${userInfo.degree}/course`,
+        params: {
+          campusId: userInfo.campus,
+        },
       });
 
       const major1CourseRes = await axios({
         method: "GET",
         url: `http://localhost:5000/api/major/${userInfo.major1}/course`,
+        params: {
+          campusId: userInfo.campus,
+        },
       });
       const major2CourseRes =
         userInfo.major2 === ""
@@ -159,6 +165,9 @@ function UserContextProvider({ children }) {
           : await axios({
               method: "GET",
               url: `http://localhost:5000/api/major/${userInfo.major2}/course`,
+              params: {
+                campusId: userInfo.campus,
+              },
             });
       const major2Courses = major2CourseRes
         ? processCourseList(major2CourseRes.data.result, "major2")
@@ -801,7 +810,6 @@ function UserContextProvider({ children }) {
     return {};
   }
 
-
   function onExportAsClicked() {
     setIsExportAs(true);
   }
@@ -809,8 +817,6 @@ function UserContextProvider({ children }) {
   function onExportCancelClicked() {
     setIsExportAs(false);
   }
-
-
 
   return (
     <UserContext.Provider

@@ -1,0 +1,46 @@
+.form-component{
+    background-color: var(--bright-gray);
+    width:80vw;
+    min-width: 600px;
+    margin:30px auto;
+    padding:20px;
+    border-radius: 10px;
+
+}
+.form-component input{
+    height:40px;
+    width:300px;
+}
+
+.form-control{
+    margin:20px 0;
+}
+.manage-component{
+    background-color: white;
+    
+    padding: 20px;
+    margin:30px 20px;
+    border-radius: 10px;
+    position: relative;
+   
+}
+.manage-component h3{
+ text-align: center;
+}
+.item-table{
+    margin:auto
+}
+.item-table td{
+    padding: 4px 15px;
+}
+.x-mark{
+    position:absolute;
+    right:10px;
+    top:10px;
+}
+.campus-dropdown{
+    text-align: center;
+}
+.dropdown-list{
+    height: 40px;
+}
