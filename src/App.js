@@ -6,11 +6,11 @@ import AdminLogin from "./components/Admin/Page/AdminLogin.js";
 import AdminHome from "./components/Admin/Page/AdminHome.js";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import AddCampus from "./components/Admin/Page/CampusPage.js";
-import CampusPage from "./components/Admin/Page/CampusPage.js";
-import MajorPage from "./components/Admin/Page/MajorPage.js";
-import DegreePage from "./components/Admin/Page/DegreePage.js";
-import CoursePage from "./components/Admin/Page/CoursePage.js";
+import CampusPage from "./components/Admin/Page/ManagePage/CampusPage.js";
+import DegreePage from "./components/Admin/Page/ManagePage/DegreePage.js";
+import MajorPage from "./components/Admin/Page/ManagePage/MajorPage.js";
+import CoursePage from "./components/Admin/Page/ManagePage/CoursePage.js";
+
 
 function App() {
   return (

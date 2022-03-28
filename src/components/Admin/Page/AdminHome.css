@@ -134,6 +134,15 @@
   background-color: white;
 }
 
+.btn-internal-gray {
+  padding: 0 10px;
+  height: 40px;
+}
+.btn-internal-gray:hover {
+  color: var(--light-blue);
+  background-color: white;
+}
+
 .btn-red {
   padding: 0 10px;
   height: 40px;

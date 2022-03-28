@@ -35,7 +35,7 @@ function Availability({ onCanvasClosed, courseName, id }) {
         },
       });
       setAvailabilityList(res.data.result);
-    } catch (error) {}
+    } catch (error) { }
   }
   async function onDelete(avaId) {
     try {
@@ -100,7 +100,11 @@ function Availability({ onCanvasClosed, courseName, id }) {
           className="x-mark"
           onClick={onCanvasClosed}
         />
+
+        <h3>Course Availability for "{courseName}"</h3>
+
         <div className="campus-dropdown">
+          <h4>Select Campus</h4>
           <DropDown
             list={campusList}
             itemType="campus"
@@ -112,7 +116,6 @@ function Availability({ onCanvasClosed, courseName, id }) {
         </div>
         {campusChosen !== "" && (
           <>
-            <h3>Course Availability for {courseName}</h3>
             <table className="item-table">
               <thead>
                 <tr>

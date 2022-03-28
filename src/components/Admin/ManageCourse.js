@@ -88,7 +88,7 @@ function ManageCourse({ Name, id, onCanvasClosed, Type }) {
           onClick={onCanvasClosed}
         />
 
-        <h3>Course available in {Name}</h3>
+        <h3>Course available in "{Name}"</h3>
         <table className="item-table">
           <thead>
             <tr>
@@ -129,22 +129,23 @@ function ManageCourse({ Name, id, onCanvasClosed, Type }) {
                 <select
                   value={typeChosen}
                   onChange={(e) => setTypeChosen(e.target.value)}
+                  className="select-type"
                 >
                   {Type === "major"
                     ? majorCourseTypes.map((type) => {
-                        return (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        );
-                      })
+                      return (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      );
+                    })
                     : degreeCourseTypes.map((type) => {
-                        return (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        );
-                      })}
+                      return (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      );
+                    })}
                 </select>
               </td>
               <td>

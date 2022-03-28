@@ -81,7 +81,7 @@ function AssumedKnowledge({ onCanvasClosed, courseName, id }) {
           onClick={onCanvasClosed}
         />
 
-        <h3>Assumed Knowledge for {courseName}</h3>
+        <h3>Assumed Knowledge for "{courseName}"</h3>
         <table className="item-table">
           <thead>
             <tr>
