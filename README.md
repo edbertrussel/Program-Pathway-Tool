@@ -38,28 +38,34 @@ npm start
 
 ## 사용 예제
 
-1. 사용자 페이지
+> 사용자 정보 입력 화면
 
-![사용자 첫페이지](./screenshots/user_first)
+![사용자 정보 입력 화면](https://github.com/Gonggibab/COMP3851/blob/master/screenshots/user_select.png)
 
+> 사용자 메인 화면
 
-## 업데이트 내역
+![사용자 메인 화면](https://github.com/Gonggibab/COMP3851/blob/master/screenshots/user_main.png)
 
-* 0.2.1
-    * 수정: 문서 업데이트 (모듈 코드 동일)
-* 0.2.0
-    * 수정: `setDefaultXYZ()` 메서드 제거
-    * 추가: `init()` 메서드 추가
-* 0.1.1
-    * 버그 수정: `baz()` 메서드 호출 시 부팅되지 않는 현상 (@컨트리뷰터 감사합니다!)
-* 0.1.0
-    * 첫 출시
-    * 수정: `foo()` 메서드 네이밍을 `bar()`로 수정
-* 0.0.1
-    * 작업 진행 중
+> 사용자 결과 화면
+
+![사용자 결과 화면](https://github.com/Gonggibab/COMP3851/blob/master/screenshots/user_result.png)
+
+> 관리자 로그인 화면
+
+![관리자 로그인 화면](https://github.com/Gonggibab/COMP3851/blob/master/screenshots/admin_login.png)
+
+> 관리자 메인 화면
+
+![사용자 결과 화면](https://github.com/Gonggibab/COMP3851/blob/master/screenshots/admin_main.png)
+
+> 관리자 데이터 수정 화면
+
+![관리자 수정 화면](https://github.com/Gonggibab/COMP3851/blob/master/screenshots/admin_manage.png)
 
 ## 정보
 
 **Newcastle University**
+
 Bachelor's of Information Technology 
+
 COMP3851B Final Year Project
